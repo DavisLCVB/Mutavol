@@ -1,0 +1,14 @@
+#pragma once
+#ifndef CONFIG_HPP
+#define CONFIG_HPP
+
+#define DEBUG @DEBUG@
+
+#include <string_view>
+
+namespace config{
+    constexpr std::string_view project{"@PROJECT_NAME@"};
+    constexpr std::string_view version{"@PROJECT_VERSION@"};
+}
+
+#endif // CONFIG_HPP
