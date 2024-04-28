@@ -9,6 +9,7 @@
 namespace config{
     constexpr std::string_view project{"@PROJECT_NAME@"};
     constexpr std::string_view version{"@PROJECT_VERSION@"};
+    constexpr std::string_view executable{"mtv"};
 }
 
 #endif // CONFIG_HPP
