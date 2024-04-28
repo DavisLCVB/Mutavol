@@ -1,0 +1,9 @@
+--- Test File ---
+Letters:
+abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
+
+Numbers:
+0123456789
+
+Characters:
+._-,;:{}[]()*?!""#$%&/\

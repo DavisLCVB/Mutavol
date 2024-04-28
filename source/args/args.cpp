@@ -1,6 +1,6 @@
 #include "args.hpp"
 
-namespace args {
+namespace mtv {
 Args::Args(int argc, char *argv[]) {
     for (int i = 1; i < argc; i++) {
         args.push_back(argv[i]);
@@ -169,4 +169,4 @@ std::filesystem::path Args::get_current_path() {
     return std::filesystem::current_path();
 }
 
-} // namespace args
+} // namespace mtv

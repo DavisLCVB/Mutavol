@@ -9,7 +9,7 @@
 #include <iostream>
 #include <filesystem>
 
-namespace args {
+namespace mtv {
 class Args {
   public:
     Args() = default;
@@ -34,6 +34,6 @@ class Args {
     void process_help();
     std::filesystem::path get_current_path();
 };
-} // namespace args
+} // namespace mtv
 
 #endif // ARGS_HPP

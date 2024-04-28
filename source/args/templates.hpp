@@ -6,7 +6,7 @@
 #include <set>
 #include <string>
 
-namespace args {
+namespace mtv {
 const std::set<std::string> templates{"--o", "--i", "--help", "--version"};
 }
 
