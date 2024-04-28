@@ -8,9 +8,13 @@ Args::Args(int argc, char *argv[]) {
 }
 
 void Args::recon() {
+    if(args.empty()){
+        exit = true;
+        return;
+    }
     auto arg = get();
     while (arg != "") {
-#ifdef DEBUG
+#if DEBUG
         std::cout << "Processing argument: " << arg << std::endl;
 #endif
         if (templates.count(arg) != 0) {
@@ -55,7 +59,7 @@ std::string Args::get() {
 }
 
 void Args::process_output(const std::string &val) {
-#ifdef DEBUG
+#if DEBUG
     std::cout << "Processing output: " << val << std::endl;
 #endif
     if (output_file.empty()) {
@@ -117,7 +121,7 @@ void Args::process_help() {
 }
 
 void Args::process_input(const std::string &val) {
-#ifdef DEBUG
+#if DEBUG
     std::cout << "Processing input: " << val << std::endl;
 #endif
     if (input_file.empty()) {
