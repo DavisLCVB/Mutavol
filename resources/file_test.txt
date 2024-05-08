@@ -1,9 +1,5 @@
---- Test File ---
-Letters:
-abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
-
-Numbers:
-0123456789
-
-Characters:
-._-,;:{}[]()*?!""#$%&/\
+int main(int argc, char *argv[]){
+    int h = 0;
+    print(h);
+    return 0;
+}

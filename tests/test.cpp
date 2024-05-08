@@ -1,7 +1,7 @@
 #include "../source/args/args.hpp"
 #include "../source/files/files.hpp"
+#include "../source/scanner/scanner.hpp"
 #include <iostream>
-#include <locale.h>
 
 int main(int argc, char *argv[]) {
     auto args = mtv::Args(argc, argv);
@@ -19,5 +19,11 @@ int main(int argc, char *argv[]) {
     for (auto token : tokens) {
         std::wcout << token;
     }
-    return 0;
+    std::wcout << std::endl;
+    mtv::Scanner scanner(tokens);
+    scanner.scan();
+    auto scanned_tokens = scanner.get_pre_tokens();
+    for (auto token : scanned_tokens) {
+        std::wcout << token << std::endl;
+    }
 }
