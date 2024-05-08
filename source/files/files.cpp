@@ -12,8 +12,11 @@ void File::write(const std::string &data) {
 }
 
 void File::read() {
+#if DEBUG
+    std::cout << "Reading file: " << file << std::endl;
+#endif
     std::wifstream in(file);
-    if(!in.is_open()) {
+    if (!in.is_open()) {
         throw std::runtime_error("Error opening file.");
     }
     tokens = std::vector<wchar_t>(std::istreambuf_iterator<wchar_t>(in),

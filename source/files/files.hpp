@@ -2,6 +2,7 @@
 #ifndef FILES_HPP
 #define FILES_HPP
 
+#include "config.hpp"
 #include <fstream>
 #include <iostream>
 #include <iterator>
