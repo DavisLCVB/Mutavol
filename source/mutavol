@@ -1,0 +1,8 @@
+#pragma once
+#ifndef MUTAVOL
+#define MUTAVOL
+
+#include "args/args.hpp"
+#include "reader/reader.hpp"
+
+#endif // MUTAVOL

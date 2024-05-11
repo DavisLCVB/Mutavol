@@ -1,5 +1,9 @@
 int main(int argc, char *argv[]){
     int h = 0;
+    /*
+    Comentario de varias lineas
+    */
     print(h);
     return 0;
+    // Comentario de una linea
 }

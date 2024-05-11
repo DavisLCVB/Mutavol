@@ -1,4 +1,4 @@
-#include "../source/args/args.hpp"
+#include "../source/mutavol"
 #include <iostream>
 
 int main(int argc, char *argv[]) {
@@ -8,7 +8,14 @@ int main(int argc, char *argv[]) {
         return 0;
     }
     auto output_file = args.get_output_file();
-    std::cout << "Output file: " << output_file << "\n";
     auto input_file = args.get_input_file();
-    std::cout << "Input file: " << input_file << "\n";
+    auto reader = mtv::Reader(input_file);
+    if (!reader.read()) {
+        return 1;
+    }
+    auto buffer = reader.get_buffer();
+    for (auto &c : buffer) {
+        std::wcout << c;
+    }
+    return 0;
 }
