@@ -1,8 +1,8 @@
 #include "../source/mutavol"
 #include <iostream>
 
-int main(int argc, char *argv[]) {
-    auto args = mtv::Args(argc, argv);
+int main(const int argc, char *argv[]) {
+    mtv::Args &args = mtv::Args::get_instance(argc, argv);
     args.recon();
     if (args.should_exit()) {
         return 0;
@@ -13,8 +13,7 @@ int main(int argc, char *argv[]) {
     if (!reader.read()) {
         return 1;
     }
-    auto buffer = reader.get_buffer();
-    for (auto &c : buffer) {
+    for (auto buffer = reader.get_buffer(); const auto &c: buffer) {
         std::wcout << c;
     }
     return 0;

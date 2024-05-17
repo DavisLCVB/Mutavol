@@ -1,12 +1,31 @@
 #include "args.hpp"
 
 namespace mtv {
+
+    std::once_flag Args::init_instance_flag;
+    std::unique_ptr<Args> Args::instance = nullptr;
+
+    Args &Args::get_instance() {
+        std::call_once(init_instance_flag, &Args::init_instance, 0, nullptr);
+        return *instance;
+    }
+
+    Args &Args::get_instance(const int argc, char *argv[]) {
+        std::call_once(init_instance_flag, &Args::init_instance, argc, argv);
+        return *instance;
+    }
+
     Args::Args(const int argc, char *argv[]) {
         for (int i = 1; i < argc; i++) {
             args.emplace_back(argv[i]);
         }
         exit = false;
     }
+
+    void Args::init_instance(const int argc, char *argv[]) {
+        instance.reset(new Args(argc, argv));
+    }
+
 
     void Args::recon() {
         if (args.empty()) {
@@ -60,7 +79,7 @@ namespace mtv {
         std::string sep = "/";
 #ifdef _WIN32
         sep = "\\";
-#endif
+#endif // _WIN32
         if (output_file.empty()) {
             if (output_file.empty()) {
                 output_file = get_current_path().string() + sep + val;
@@ -80,7 +99,7 @@ namespace mtv {
         if (val.starts_with("\\") || val.starts_with("/")) {
             output_file = val;
         }
-#endif
+#endif// __linux__
 #ifdef _WIN32
             if (const std::string vol = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
                 val.find(':') != std::string::npos &&
@@ -128,7 +147,7 @@ namespace mtv {
         std::string sep = "/";
 #ifdef _WIN32
         sep = "\\";
-#endif
+#endif// _WIN32
         if (input_file.empty()) {
             input_file = get_current_path().string() + sep + val;
         } else {
@@ -147,14 +166,14 @@ namespace mtv {
     if (val.starts_with("\\") || val.starts_with("/")) {
         input_file = val;
     }
-#endif
+#endif// __linux__
 #ifdef _WIN32
         if (const std::string vol = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
             val.find(':') != std::string::npos &&
             vol.find(val[0]) != std::string::npos) {
             input_file = val;
         }
-#endif
+#endif// _WIN32
         if (val.starts_with("..\\") || val.starts_with("../")) {
             auto path = get_current_path();
             auto _val = val;
