@@ -7,7 +7,7 @@ set(DEBUG true)
 
 configure_file( ${CMAKE_SOURCE_DIR}/source/config.hpp.in ${CMAKE_BINARY_DIR}/config.hpp)
 
-file(GLOB SOURCES "source/*.cpp" "source/*/*.cpp")
+file(GLOB SOURCES "source/*.cpp" "source/*/*.cpp" "source/*/*/*.cpp")
 file(GLOB TEST "tests/*.cpp")
 file(GLOB MAIN "main.cpp")
 

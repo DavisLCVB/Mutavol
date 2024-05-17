@@ -15,9 +15,6 @@ namespace mtv {
         }
         auto arg = get();
         while (!arg.empty()) {
-#if DEBUG
-            std::cout << "Processing argument: " << arg << std::endl;
-#endif
             if (templates.contains(arg)) {
                 if (arg == "--o") {
                     process_output(get());
@@ -60,9 +57,6 @@ namespace mtv {
     }
 
     void Args::process_output(const std::string &val) {
-#if DEBUG
-        std::cout << "Processing output: " << val << std::endl;
-#endif
         std::string sep = "/";
 #ifdef _WIN32
         sep = "\\";
@@ -88,9 +82,9 @@ namespace mtv {
         }
 #endif
 #ifdef _WIN32
-            auto vol = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-            if (val.find(':') != std::string::npos &&
-                val.find(val[0]) != std::string::npos) {
+            if (const std::string vol = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+                val.find(':') != std::string::npos &&
+                vol.find(val[0]) != std::string::npos) {
                 output_file = val;
             }
 #endif
@@ -131,9 +125,6 @@ namespace mtv {
     }
 
     void Args::process_input(const std::string &val) {
-#if DEBUG
-        std::cout << "Processing input: " << val << std::endl;
-#endif
         std::string sep = "/";
 #ifdef _WIN32
         sep = "\\";
@@ -144,7 +135,7 @@ namespace mtv {
             exit = true;
             std::cerr << "Invalid argument: " << val << std::endl;
         }
-        if (val == "") {
+        if (val.empty()) {
             exit = true;
             std::cerr << "Invalid argument: " << val << std::endl;
         }
@@ -158,9 +149,9 @@ namespace mtv {
     }
 #endif
 #ifdef _WIN32
-        auto vol = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        if (val.find(":") != std::string::npos &&
-            val.find(val[0]) != std::string::npos) {
+        if (const std::string vol = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            val.find(':') != std::string::npos &&
+            vol.find(val[0]) != std::string::npos) {
             input_file = val;
         }
 #endif
@@ -183,9 +174,6 @@ namespace mtv {
             exit = true;
             std::cerr << "File doesn't exist: " << val << std::endl;
         }
-#if DEBUG
-        std::cout << "Input file set to: " << input_file << std::endl;
-#endif
     }
 
     std::filesystem::path Args::get_current_path() {

@@ -32,7 +32,7 @@ class Args {
     void process_input(const std::string &val);
     void process_version();
     void process_help();
-    std::filesystem::path get_current_path();
+    static std::filesystem::path get_current_path();
 };
 } // namespace mtv
 
