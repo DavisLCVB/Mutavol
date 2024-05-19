@@ -11,10 +11,6 @@ file(GLOB SOURCES "source/*.cpp" "source/*/*.cpp" "source/*/*/*.cpp")
 file(GLOB TEST "tests/*.cpp")
 file(GLOB MAIN "main.cpp")
 
-add_executable(mtv ${SOURCES} ${MAIN}
-        source/utilities/patterns/singleton.hpp)
-add_executable(mtvt ${SOURCES} ${TEST}
-        source/utilities/patterns/singleton.hpp)
+add_executable(${PROJECT_NAME} ${SOURCES})
 
-target_include_directories(mtv PRIVATE ${CMAKE_BINARY_DIR})
-target_include_directories(mtvt PRIVATE ${CMAKE_BINARY_DIR})
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
