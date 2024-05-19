@@ -12,9 +12,17 @@ file(GLOB TEST "tests/*.cpp")
 file(GLOB MAIN "main.cpp")
 
 add_executable(mtv ${SOURCES} ${MAIN}
-        source/utilities/patterns/singleton.hpp)
+        source/core/buffer/buffer.hpp
+        source/utilities/data_structures/linked_list.hpp
+        source/utilities/data_structures/nodes.hpp
+        source/utilities/factory/node_fact.hpp
+        source/utilities/factory/list_fact.hpp
+        source/utilities/data_structures/position.hpp)
 add_executable(mtvt ${SOURCES} ${TEST}
-        source/utilities/patterns/singleton.hpp)
+        source/core/buffer/buffer.hpp
+        source/utilities/data_structures/linked_list.hpp
+        source/utilities/factory/node_fact.hpp
+        source/utilities/factory/list_fact.hpp)
 
 target_include_directories(mtv PRIVATE ${CMAKE_BINARY_DIR})
 target_include_directories(mtvt PRIVATE ${CMAKE_BINARY_DIR})
