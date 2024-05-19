@@ -2,9 +2,27 @@
 #include <iostream>
 #include <fstream>
 #include <ranges>
+#include <vector>
+
+#include "../../utilities/data_structures/position.hpp"
+#include "../buffer/buffer.hpp"
 
 namespace mtv {
-    bool Reader::read() {
+
+    std::unique_ptr<Reader> Reader::instance = nullptr;
+
+    void Reader::init_instance(const std::string &input_file) {
+        instance.reset(new Reader(input_file));
+    }
+
+    Reader &Reader::get_instance(const std::string &input_file) {
+        if (instance == nullptr) {
+            init_instance(input_file);
+        }
+        return *instance;
+    }
+
+    bool Reader::read() const {
         if (!verify()) {
             std::cerr << "Error: Invalid input file." << std::endl;
             return false;
@@ -31,56 +49,52 @@ namespace mtv {
         return true;
     }
 
-    bool Reader::read_file() {
+    bool Reader::read_file() const {
         std::wifstream file(input_file);
         if (!file.is_open()) {
             return false;
         }
-        this->buffer = vec_wchar(std::istreambuf_iterator(file),
+        auto _file = std::vector(std::istreambuf_iterator(file),
                                  std::istreambuf_iterator<wchar_t>());
+        size_t i{1};
+        size_t j{1};
+        for (auto wc: _file) {
+            Buffer<std::pair<wchar_t, Position> >::get_instance().push(
+                std::make_pair(wc, Position(i, j)));
+            if (wc == L'\n') {
+                ++i;
+                j = 1;
+            } else {
+                ++j;
+            }
+        }
         file.close();
         return true;
     }
 
     void Reader::clean() {
-        auto new_buff = vec_wchar();
-        auto it = this->buffer.begin();
-        while (it != this->buffer.end()) {
-            if (*it == '/' && *(it + 1) == '/') {
-                while (*it != '\n') {
-                    ++it;
-                }
-            } else if (*it == '/' && *(it + 1) == '*') {
-                while (!(*it == '*' && *(it + 1) == '/')) {
-                    ++it;
-                }
-                it += 2;
-            } else {
-                new_buff.push_back(*it);
+        remove_comments();
+        remove_spaces();
+    }
+
+    void Reader::remove_comments() {
+        auto &buff = Buffer<std::pair<wchar_t, Position> >::get_instance();
+        auto it = buff.begin();
+        bool in_block{false};
+        unsigned long long line_n{0};
+        while(it != buff.end()) {
+            std::wstring line;
+            while (it != buff.end() && it->second.row == line_n) {
+                line.push_back(it->first);
                 ++it;
             }
+            size_t pos_line_comment = line.find(L"//");
+            if (pos_line_comment != std::wstring::npos) {
+                auto init_comment = buff.begin() +
+            }
         }
+    }
 
-        std::vector<std::pair<size_t, size_t> > to_remove;
-        do {
-            to_remove.clear();
-            for (size_t j = 0; j < new_buff.size(); ++j) {
-                if (new_buff[j] == L'\n') {
-                    std::pair<size_t, size_t> p;
-                    p.first = j++;
-                    while (j < new_buff.size() && new_buff[j] == L' ') {
-                        ++j;
-                    };
-                    if (new_buff[j] == L'\n' || new_buff[j] == L' ') {
-                        p.first == j - 1 ? p.second = j : p.second = j - 1;
-                        to_remove.push_back(p);
-                    }
-                }
-            }
-            for (auto &[fst, snd]: std::ranges::reverse_view(to_remove)) {
-                new_buff.erase(new_buff.begin() + fst, new_buff.begin() + snd);
-            }
-        } while (!to_remove.empty());
-        this->buffer = new_buff;
+    void Reader::remove_spaces() {
     }
 } // namespace mtv
