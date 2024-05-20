@@ -14,7 +14,7 @@
 #include <iostream>
 #endif // DEBUG
 
-namespace classifier
+namespace mia_kalinux
 {
     class Classifier final
     {
@@ -31,6 +31,7 @@ namespace classifier
         // Cadena de prueba que sustituye temporalmente a slicer
         int test_string_index = 0;
         static const std::vector<std::string> TEST_STRINGS;
+
         static const std::string IDENTIFIERS;
         static const std::string OPERATORS;
         static const std::string DELIMITERS;

@@ -4,7 +4,7 @@ std::string enumToString(TokenType type);
 
 int main(const int argc, char *argv[])
 {
-    classifier::Classifier &classifier = classifier::Classifier::get_instance();
+    mia_kalinux::Classifier &classifier = mia_kalinux::Classifier::get_instance();
     Token_t tok;
     for (int i = 0; i < 27; i++)
     {

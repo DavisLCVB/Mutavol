@@ -1,6 +1,6 @@
 #include "classifier.hpp"
 
-namespace classifier
+namespace mia_kalinux
 {
     std::once_flag Classifier::init_instance_flag;
     std::unique_ptr<Classifier> Classifier::instance = nullptr;
