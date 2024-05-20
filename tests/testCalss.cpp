@@ -8,10 +8,15 @@ int main(const int argc, char *argv[])
 
     mia_kalinux::Classifier &classifier = mia_kalinux::Classifier::get_instance();
     Token_t tok;
-    for (int i = 0; i < 27; i++)
-    {
-        tok = classifier.next_token();
+
+    tok = classifier.next_token();
+
+    //misma instancia de slicer que se crea en .next_token() del classifier
+    mtv::slicer &slicer = mtv::slicer::get_instance();
+
+    while(tok.lexem != "fin"){
         std::cout << "Token: " << tok.lexem << " - " << enumToString(tok.type) << std::endl;
+        tok = classifier.next_token();
     }
     return 0;
 }

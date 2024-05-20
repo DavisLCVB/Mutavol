@@ -12,6 +12,10 @@ namespace mtv
             instance = new slicer(test_buffer);
         return *instance;
     }
+    slicer &slicer::get_instance()
+    {
+        return *instance;
+    }
 
     void slicer::slice()
     {
