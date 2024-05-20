@@ -17,6 +17,7 @@ namespace mtv {
             charcurrent = this->test_buffer.begin();
             charend = this->test_buffer.end();
         }
+        std::vector<std::string> tokens;
 
     public:
         slicer(slicer const&) = delete;
@@ -26,11 +27,12 @@ namespace mtv {
         static const std::string operators;
 
         void slice();
-        const void getnext_token();
+        const std::string getnext_token();
         bool charconcatenate();
         bool is_number();
         bool is_operator();
         void case_double_symbols(std::string &double_symbol_token, std::string &token);
+        const std::vector<std::string> get_tokens() const;
 
     };
 

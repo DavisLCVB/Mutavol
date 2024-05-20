@@ -21,8 +21,7 @@ int main(const int argc, char *argv[]){
 
     for(int i = 0; i < test_buffer.size(); i++){
         slicer.getnext_token();
-    }
-    return 0;*/
+    }*/
 
     // false buffer "se obtendrá de clase buffer"
     std::string str = "entero a = 12;\nsi (a = 12){}\nsino{ float b = 0.1; \n far.get();}";
@@ -31,7 +30,14 @@ int main(const int argc, char *argv[]){
     mtv::slicer &slicer = mtv::slicer::get_instance(test_buffer);
 
     for(int i = 0; i < test_buffer.size(); i++){
-        slicer.getnext_token();
+        std::string token = slicer.getnext_token();
+        while(token != "fin"){
+            std::cout << token << std::endl;
+            token = slicer.getnext_token();
+        }
+    }
+    for(const auto &token : slicer.get_tokens()){
+        std::cout <<"token del vector : " << token << std::endl;
     }
 
     return 0;
