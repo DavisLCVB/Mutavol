@@ -23,6 +23,7 @@ namespace mtv {
         slicer(slicer const&) = delete;
         slicer() = delete;
         static slicer &get_instance(const std::vector<char>& test_buffer);
+        static slicer &get_instance();
 
         static const std::string operators;
 
