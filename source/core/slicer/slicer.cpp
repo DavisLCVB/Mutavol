@@ -23,12 +23,13 @@ namespace mtv {
         if (is_operator())
             return;
     }
-    const void slicer::getnext_token() {
+    const std::string slicer::getnext_token() {
         if (this->charcurrent == this->charend)
         {
-            return;
+            return "fin";
         }
         this->slice();
+        return this->tokens.back();
     }
 
     bool slicer::charconcatenate() {
@@ -45,9 +46,7 @@ namespace mtv {
                     break;
                 c = *(this->charcurrent);
             }
-            std::cout << token << std::endl;
-            //this->tok = Token({token, TokenType::IDENTIFIER});
-
+            tokens.push_back(token);
             return true;
         }
         return false;
@@ -65,8 +64,7 @@ namespace mtv {
                     break;
                 c = *(this->charcurrent);
             }
-            std::cout << token << std::endl;
-            //this->tok = Token({token, TokenType::NUMBER});
+            tokens.push_back(token);
             return true;
         }
         return false;
@@ -83,8 +81,7 @@ namespace mtv {
                 double_symbol_token.push_back(*(this->charcurrent));
                 case_double_symbols(double_symbol_token, token);
             }
-            std::cout << token << std::endl;
-            //this->tok = Token({token, TokenType::OPERATOR});
+            tokens.push_back(token);
             return true;
         }
         return false;
@@ -103,5 +100,9 @@ namespace mtv {
             token = double_symbol_token;
             (this->charcurrent)++;
         }
+    }
+
+    const std::vector<std::string> slicer::get_tokens() const {
+        return tokens;
     }
 } // namespace mtv
