@@ -10,10 +10,11 @@ enum class TokenType
     OPERATOR,
     DELIMITER,
     KEYWORD,
-    LITERAL
+    LITERAL,
+    UNIDENTIFIED
 };
 
-class Token_t
+struct Token_t
 {
     std::string lexem;
     TokenType type;

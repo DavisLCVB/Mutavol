@@ -4,5 +4,6 @@
 
 #include "args/args.hpp"
 #include "core/reader/reader.hpp"
+#include "core/classifier/classifier.hpp"
 
 #endif // MUTAVOL
