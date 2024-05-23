@@ -1,14 +1,16 @@
 #include "classifier.hpp"
 
-namespace mtv
-{
+namespace mtv {
     std::once_flag Classifier::init_instance_flag;
     std::unique_ptr<Classifier> Classifier::instance = nullptr;
     const std::string Classifier::IDENTIFIERS = "(_|[a-zA-Z])(_|[a-zA-Z0-9])*";
-    const std::string Classifier::OPERATORS = "(\\+)|(-)|(\\*)|(/)|(<)|(>)|(=)|(==)|(!=)|(<=)|(>=)|(&&)|(\\|\\|)";
-    const std::string Classifier::KEYWORDS = "(si)|(sino)|(mientras)|(para)|(void)|(caracter)|(cadena)|(entero)|(decimal)|(funcion)$";
+    const std::string Classifier::OPERATORS =
+            R"((\+)|(-)|(\*)|(/)|(<)|(>)|(=)|(==)|(!=)|(<=)|(>=)|(&&)|(\|\|))";
+    const std::string Classifier::KEYWORDS =
+            "(si)|(sino)|(mientras)|(para)|(void)|(caracter)|(cadena)|(entero)|(decimal)|(funcion)$";
     const std::string Classifier::LITERALS = "(\"(.)*\")|([0-9]+)";
-    const std::string Classifier::DELIMITERS = "(\\()|(\\))|(\\[)|(\\])|(do)|(fin_.*)|(,)|(\\\\n)";
+    const std::string Classifier::DELIMITERS =
+            R"((\()|(\))|(\[)|(\])|(do)|(fin_.*)|(,)|(\\n))";
 
     const std::vector<std::string> Classifier::TEST_STRINGS = {
         "entero",
@@ -37,22 +39,23 @@ namespace mtv
         "&",
         "<=",
         "fin_mientras",
-        "fin_aya"};
-    Classifier &Classifier::get_instance()
-    {
+        "fin_aya"
+    };
+
+    Classifier &Classifier::get_instance() {
         std::call_once(init_instance_flag, &Classifier::init_instance);
         return *instance;
     }
 
-    void Classifier::init_instance()
-    {
+    void Classifier::init_instance() {
         instance.reset(new Classifier());
     }
 
-    void Classifier::classify()
-    {
+    void Classifier::classify() {
         // Llamado artificial a slicer
-        this->tok = Token_t({this->TEST_STRINGS[this->test_string_index], TokenType::UNIDENTIFIED});
+        this->tok = Token_t({
+            TEST_STRINGS[this->test_string_index], TokenType::UNIDENTIFIED
+        });
         this->test_string_index++;
 
         if (is_keyword())
@@ -63,65 +66,53 @@ namespace mtv
             return;
         if (is_operator())
             return;
-        if (is_literal())
-            return;
+        is_literal();
     }
 
-    const Token_t Classifier::next_token()
-    {
-        this->classify();
+    Token_t Classifier::next_token() {
+        classify();
         return this->tok;
     }
 
-    bool Classifier::is_identifier()
-    {
-        std::regex identifier(this->IDENTIFIERS);
-        if (std::regex_match(this->tok.lexem, identifier))
-        {
+    bool Classifier::is_identifier() {
+        if (const std::regex identifier(IDENTIFIERS); std::regex_match(
+            this->tok.lexem, identifier)) {
             this->tok.type = TokenType::IDENTIFIER;
             return true;
         }
         return false;
     }
 
-    bool Classifier::is_operator()
-    {
-        std::regex operator_regex(this->OPERATORS);
-        if (std::regex_match(this->tok.lexem, operator_regex))
-        {
+    bool Classifier::is_operator() {
+        if (const std::regex operator_regex(OPERATORS); std::regex_match(
+            this->tok.lexem, operator_regex)) {
             this->tok.type = TokenType::OPERATOR;
             return true;
         }
         return false;
     }
 
-    bool Classifier::is_keyword()
-    {
-        std::regex keyword(this->KEYWORDS);
-        if (std::regex_match(this->tok.lexem, keyword))
-        {
+    bool Classifier::is_keyword() {
+        if (const std::regex keyword(KEYWORDS);
+            std::regex_match(this->tok.lexem, keyword)) {
             this->tok.type = TokenType::KEYWORD;
             return true;
         }
         return false;
     }
 
-    bool Classifier::is_literal()
-    {
-        std::regex literal(this->LITERALS);
-        if (std::regex_match(this->tok.lexem, literal))
-        {
+    bool Classifier::is_literal() {
+        if (const std::regex literal(LITERALS);
+            std::regex_match(this->tok.lexem, literal)) {
             this->tok.type = TokenType::LITERAL;
             return true;
         }
         return false;
     }
 
-    bool Classifier::is_delimiter()
-    {
-        std::regex delimiter(this->DELIMITERS);
-        if (std::regex_match(this->tok.lexem, delimiter))
-        {
+    bool Classifier::is_delimiter() {
+        if (const std::regex delimiter(DELIMITERS); std::regex_match(
+            this->tok.lexem, delimiter)) {
             this->tok.type = TokenType::DELIMITER;
             return true;
         }

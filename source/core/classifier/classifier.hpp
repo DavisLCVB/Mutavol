@@ -2,7 +2,7 @@
 #ifndef Classifier_HPP
 #define Classifier_HPP
 
-#include "../types.hpp"
+#include "../../utilities/data_structures/types.hpp"
 #include "config.hpp"
 #include <iostream>
 #include <memory>
@@ -14,19 +14,8 @@
 #include <iostream>
 #endif // DEBUG
 
-namespace mia_kalinux
-{
-    class Classifier final
-    {
-    private:
-        static std::unique_ptr<Classifier> instance;
-        static std::once_flag init_instance_flag;
-
-        Token_t tok;
-
-        static void init_instance();
-        Classifier() = default;
-
+namespace mtv {
+    class Classifier {
     public:
         // Cadena de prueba que sustituye temporalmente a slicer
         int test_string_index = 0;
@@ -39,14 +28,16 @@ namespace mia_kalinux
         static const std::string LITERALS;
 
         ~Classifier() = default;
+
         Classifier(const Classifier &) = delete;
+
         Classifier &operator=(const Classifier &) = delete;
 
         static Classifier &get_instance();
 
         void classify();
 
-        const Token_t next_token();
+        Token_t next_token();
 
         bool is_identifier();
 
@@ -58,7 +49,15 @@ namespace mia_kalinux
 
         bool is_delimiter();
 
-    };
+    private:
+        static std::unique_ptr<Classifier> instance;
+        static std::once_flag init_instance_flag;
 
+        Token_t tok;
+
+        static void init_instance();
+
+        Classifier() = default;
+    };
 } // namespace Classifier
 #endif // Classifier_HPP
