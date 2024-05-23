@@ -1,6 +1,6 @@
 #include "classifier.hpp"
 
-namespace mia_kalinux
+namespace mtv
 {
     std::once_flag Classifier::init_instance_flag;
     std::unique_ptr<Classifier> Classifier::instance = nullptr;

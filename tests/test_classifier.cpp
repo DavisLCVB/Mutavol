@@ -2,9 +2,9 @@
 #include <iostream>
 std::string enumToString(TokenType type);
 
-int main(const int argc, char *argv[])
+int test_classifier(const int argc, char *argv[])
 {
-    mia_kalinux::Classifier &classifier = mia_kalinux::Classifier::get_instance();
+    mtv::Classifier &classifier = mtv::Classifier::get_instance();
     Token_t tok;
     for (int i = 0; i < 27; i++)
     {

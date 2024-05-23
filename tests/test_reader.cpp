@@ -4,7 +4,7 @@
 #include "../source/core/buffer/buffer.hpp"
 #include "../source/utilities/data_structures/position.hpp"
 
-int main(const int argc, char *argv[]) {
+int test_reader(const int argc, char *argv[]) {
     auto &args = mtv::Args::get_instance(argc, argv);
     args.recon();
     if (args.should_exit()) {
