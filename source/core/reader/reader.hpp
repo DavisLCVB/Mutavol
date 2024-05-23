@@ -2,29 +2,48 @@
 #ifndef READER_HPP
 #define READER_HPP
 
+#include <memory>
 #include <string>
 #include <utility>
-#include <vector>
 #include <ranges>
 
 namespace mtv {
-// Using space
-using std::string;
-using vec_wchar = std::vector<wchar_t>;
-// Using space
-class Reader {
-  public:
-    explicit Reader(string input_file) : input_file(std::move(input_file)) {}
-    bool read();
-    vec_wchar get_buffer() { return buffer; }
-  private:
-    string input_file;
-    vec_wchar buffer;
+    // Using space
+    using std::string;
 
-    bool verify() const;
-    bool read_file();
-    void clean();
-}; // class Reader
+    // Using space
+    class Reader {
+    public:
+
+        static Reader &get_instance(const std::string &input_file);
+
+        Reader(const Reader &) = delete;
+
+        Reader &operator=(const Reader &) = delete;
+
+        [[nodiscard]]
+        bool read() const;
+
+    private:
+        string input_file;
+        static std::unique_ptr<Reader> instance;
+
+        [[nodiscard]]
+        bool verify() const;
+
+        [[nodiscard]]
+        bool read_file() const;
+
+        static void clean();
+
+        static void remove_comments();
+
+        static void remove_lines();
+
+        explicit Reader(string input_file) : input_file(std::move(input_file)) {}
+
+        static void init_instance(const std::string &input_file);
+    }; // class Reader
 } // namespace mtv
 
 #endif // READER_HPP

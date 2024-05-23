@@ -2,9 +2,26 @@
 #include <iostream>
 #include <fstream>
 #include <ranges>
+#include <vector>
+
+#include "../../utilities/data_structures/position.hpp"
+#include "../buffer/buffer.hpp"
 
 namespace mtv {
-    bool Reader::read() {
+    std::unique_ptr<Reader> Reader::instance = nullptr;
+
+    void Reader::init_instance(const std::string &input_file) {
+        instance.reset(new Reader(input_file));
+    }
+
+    Reader &Reader::get_instance(const std::string &input_file) {
+        if (instance == nullptr) {
+            init_instance(input_file);
+        }
+        return *instance;
+    }
+
+    bool Reader::read() const {
         if (!verify()) {
             std::cerr << "Error: Invalid input file." << std::endl;
             return false;
@@ -31,56 +48,104 @@ namespace mtv {
         return true;
     }
 
-    bool Reader::read_file() {
+    bool Reader::read_file() const {
+        using pair = std::pair<wchar_t, Position>;
         std::wifstream file(input_file);
         if (!file.is_open()) {
             return false;
         }
-        this->buffer = vec_wchar(std::istreambuf_iterator(file),
+        auto _file = std::vector(std::istreambuf_iterator(file),
                                  std::istreambuf_iterator<wchar_t>());
-        file.close();
+        size_t row{1}, column{1};
+        auto &buff = Buffer<LinkedList<pair> >::get_instance();
+        const auto ll = ListFactory::create_linked_list<pair>();
+        for (const auto &c: _file) {
+            ll->push(std::make_pair(c, Position(row, column)));
+            if (c == L'\n') {
+                buff.push(*ll);
+                ++row;
+                column = 1;
+                ll->clear();
+            } else {
+                ++column;
+            }
+        }
         return true;
     }
 
     void Reader::clean() {
-        auto new_buff = vec_wchar();
-        auto it = this->buffer.begin();
-        while (it != this->buffer.end()) {
-            if (*it == '/' && *(it + 1) == '/') {
-                while (*it != '\n') {
-                    ++it;
+        remove_comments();
+        remove_lines();
+    }
+
+    void Reader::remove_comments() {
+        auto &buff = Buffer<LinkedList<std::pair<wchar_t, Position> > >::get_instance();
+        size_t line_comment{0};
+        bool block_comment{false};
+        for (auto &ll: buff) {
+            size_t index{0};
+            auto it = ll.begin();
+            while (it != ll.end()) {
+                if (it->first == L'/' && (it + 1) != ll.end() && (it + 1)->first ==
+                    L'/') {
+                    line_comment = it->second.row;
                 }
-            } else if (*it == '/' && *(it + 1) == '*') {
-                while (!(*it == '*' && *(it + 1) == '/')) {
+                if (it->second.row == line_comment && it->first != L'\n') {
                     ++it;
+                    ll.pop(index);
+                    continue;
                 }
-                it += 2;
-            } else {
-                new_buff.push_back(*it);
+                ++index;
                 ++it;
             }
         }
-
-        std::vector<std::pair<size_t, size_t> > to_remove;
-        do {
-            to_remove.clear();
-            for (size_t j = 0; j < new_buff.size(); ++j) {
-                if (new_buff[j] == L'\n') {
-                    std::pair<size_t, size_t> p;
-                    p.first = j++;
-                    while (j < new_buff.size() && new_buff[j] == L' ') {
-                        ++j;
-                    };
-                    if (new_buff[j] == L'\n' || new_buff[j] == L' ') {
-                        p.first == j - 1 ? p.second = j : p.second = j - 1;
-                        to_remove.push_back(p);
+        for (auto &ll: buff) {
+            size_t index{0};
+            auto it = ll.begin();
+            while (it != ll.end()) {
+                if (it->first == L'/' && (it + 1) != ll.end() && (it + 1)->first ==
+                    L'*') {
+                    block_comment = true;
+                }
+                if (block_comment) {
+                    if (it->first == L'*' && (it + 1) != ll.end() && (it + 1)->first ==
+                        L'/') {
+                        block_comment = false;
+                        ++it++;
+                        ll.pop(index);
+                        ll.pop(index);
+                    } else {
+                        ++it;
+                        ll.pop(index);
                     }
+                } else {
+                    ++index;
+                    ++it;
                 }
             }
-            for (auto &[fst, snd]: std::ranges::reverse_view(to_remove)) {
-                new_buff.erase(new_buff.begin() + fst, new_buff.begin() + snd);
+        }
+    }
+
+    void Reader::remove_lines() {
+        auto &buff = Buffer<LinkedList<std::pair<wchar_t, Position> > >::get_instance();
+        size_t index{0};
+        auto it{buff.begin()};
+        while (it != buff.end()) {
+            auto &line = *it;
+            auto del{true};
+            for (auto &c: line) {
+                if (c.first != L' ' && c.first != L'\n' && c.first != L'\t') {
+                    del = false;
+                    break;
+                }
             }
-        } while (!to_remove.empty());
-        this->buffer = new_buff;
+            if (del) {
+                ++it;
+                buff.pop(index);
+                continue;
+            }
+            ++index;
+            ++it;
+        }
     }
 } // namespace mtv
