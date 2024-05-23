@@ -15,11 +15,12 @@ int main(const int argc, char *argv[]) {
     if (const auto &reader = mtv::Reader::get_instance(input_file); !reader.read()) {
         return 1;
     }
-    auto &buff = mtv::Buffer<std::pair<wchar_t, mtv::Position> >::get_instance();
-    const auto size = buff.get_size();
-    for (size_t i = 0; i < size; ++i) {
-        auto [c, p] = buff.get(i);
-        std::wcout << c << " " << p.row << " " << p.column << std::endl;
+    auto &buff = mtv::Buffer<mtv::LinkedList<std::pair<wchar_t,
+        mtv::Position> > >::get_instance();
+    for (const auto &line: buff) {
+        for (const auto &[fst, snd]: line) {
+            std::wcout << fst;
+        }
     }
     return 0;
 }

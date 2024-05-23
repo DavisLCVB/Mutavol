@@ -15,6 +15,13 @@ namespace mtv {
             push(data, size);
         }
 
+        LinkedList(const LinkedList &other) noexcept : head{nullptr}, tail{nullptr},
+                                                       size(0) {
+            for (auto &element: other) {
+                push(element);
+            }
+        }
+
         void push(const T &data, const size_t index) noexcept(false) {
             if (!check_index(index, true)) {
                 throw std::out_of_range("Index out of range");
@@ -45,8 +52,11 @@ namespace mtv {
         }
 
         void pop(const size_t index) noexcept(false) {
-            if (!check_index(index))
-                throw std::out_of_range("Index out of range");
+            if (!check_index(index)) {
+                const std::string msg = "Index out of range: " + std::to_string(index) + " " +
+                                        std::to_string(size) + "\n";
+                throw std::out_of_range(msg);
+            }
             if (index == 0) {
                 auto temp = head;
                 head = head->get_next();
@@ -99,6 +109,9 @@ namespace mtv {
                 current = current->get_next();
                 delete temp;
             }
+            head = nullptr;
+            tail = nullptr;
+            size = 0;
         }
 
         ~LinkedList() {
@@ -151,12 +164,13 @@ namespace mtv {
     class LinkedList<T>::Iterator {
     public:
         using iterator_category = std::forward_iterator_tag;
-        using difference_type   = std::ptrdiff_t;
-        using value_type        = T;
-        using pointer           = T*;
-        using reference         = T&;
+        using difference_type = std::ptrdiff_t;
+        using value_type = T;
+        using pointer = T *;
+        using reference = T &;
 
         explicit Iterator(Node<T> *node) : node(node) {}
+        Iterator(const Iterator &other) noexcept : node(other.node) {}
 
         reference operator*() const {
             return node->get_data();
@@ -177,6 +191,14 @@ namespace mtv {
             return temp;
         }
 
+        Iterator operator+(const size_t index) {
+            auto cp{*this};
+            for (size_t i = 0; i < index; ++i) {
+                cp.node = cp.node->get_next();
+            }
+            return cp;
+        }
+
         friend bool operator==(const Iterator &lhs, const Iterator &rhs) {
             return lhs.node == rhs.node;
         }
@@ -193,12 +215,13 @@ namespace mtv {
     class LinkedList<T>::ConstIterator {
     public:
         using iterator_category = std::forward_iterator_tag;
-        using difference_type   = std::ptrdiff_t;
-        using value_type        = const T;
-        using pointer           = const T*;
-        using reference         = const T&;
+        using difference_type = std::ptrdiff_t;
+        using value_type = const T;
+        using pointer = const T *;
+        using reference = const T &;
 
-        explicit ConstIterator(Node<T> *node) : node(node) {}
+        explicit ConstIterator(const Node<T> *
+            node) : node(node) {}
 
         reference operator*() const {
             return node->get_data();
@@ -226,6 +249,7 @@ namespace mtv {
         friend bool operator!=(const ConstIterator &lhs, const ConstIterator &rhs) {
             return lhs.node != rhs.node;
         }
+
     private:
         const Node<T> *node;
     };

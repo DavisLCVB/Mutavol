@@ -8,7 +8,6 @@
 #include "../buffer/buffer.hpp"
 
 namespace mtv {
-
     std::unique_ptr<Reader> Reader::instance = nullptr;
 
     void Reader::init_instance(const std::string &input_file) {
@@ -50,51 +49,103 @@ namespace mtv {
     }
 
     bool Reader::read_file() const {
+        using pair = std::pair<wchar_t, Position>;
         std::wifstream file(input_file);
         if (!file.is_open()) {
             return false;
         }
         auto _file = std::vector(std::istreambuf_iterator(file),
                                  std::istreambuf_iterator<wchar_t>());
-        size_t i{1};
-        size_t j{1};
-        for (auto wc: _file) {
-            Buffer<std::pair<wchar_t, Position> >::get_instance().push(
-                std::make_pair(wc, Position(i, j)));
-            if (wc == L'\n') {
-                ++i;
-                j = 1;
+        size_t row{1}, column{1};
+        auto &buff = Buffer<LinkedList<pair> >::get_instance();
+        const auto ll = ListFactory::create_linked_list<pair>();
+        for (const auto &c: _file) {
+            ll->push(std::make_pair(c, Position(row, column)));
+            if (c == L'\n') {
+                buff.push(*ll);
+                ++row;
+                column = 1;
+                ll->clear();
             } else {
-                ++j;
+                ++column;
             }
         }
-        file.close();
         return true;
     }
 
     void Reader::clean() {
         remove_comments();
-        remove_spaces();
+        remove_lines();
     }
 
     void Reader::remove_comments() {
-        auto &buff = Buffer<std::pair<wchar_t, Position> >::get_instance();
-        auto it = buff.begin();
-        bool in_block{false};
-        unsigned long long line_n{0};
-        while(it != buff.end()) {
-            std::wstring line;
-            while (it != buff.end() && it->second.row == line_n) {
-                line.push_back(it->first);
+        auto &buff = Buffer<LinkedList<std::pair<wchar_t, Position> > >::get_instance();
+        size_t line_comment{0};
+        bool block_comment{false};
+        for (auto &ll: buff) {
+            size_t index{0};
+            auto it = ll.begin();
+            while (it != ll.end()) {
+                if (it->first == L'/' && (it + 1) != ll.end() && (it + 1)->first ==
+                    L'/') {
+                    line_comment = it->second.row;
+                }
+                if (it->second.row == line_comment && it->first != L'\n') {
+                    ++it;
+                    ll.pop(index);
+                    continue;
+                }
+                ++index;
                 ++it;
             }
-            size_t pos_line_comment = line.find(L"//");
-            if (pos_line_comment != std::wstring::npos) {
-                auto init_comment = buff.begin() +
+        }
+        for (auto &ll: buff) {
+            size_t index{0};
+            auto it = ll.begin();
+            while (it != ll.end()) {
+                if (it->first == L'/' && (it + 1) != ll.end() && (it + 1)->first ==
+                    L'*') {
+                    block_comment = true;
+                }
+                if (block_comment) {
+                    if (it->first == L'*' && (it + 1) != ll.end() && (it + 1)->first ==
+                        L'/') {
+                        block_comment = false;
+                        ++it++;
+                        ll.pop(index);
+                        ll.pop(index);
+                    } else {
+                        ++it;
+                        ll.pop(index);
+                    }
+                } else {
+                    ++index;
+                    ++it;
+                }
             }
         }
     }
 
-    void Reader::remove_spaces() {
+    void Reader::remove_lines() {
+        auto &buff = Buffer<LinkedList<std::pair<wchar_t, Position> > >::get_instance();
+        size_t index{0};
+        auto it{buff.begin()};
+        while (it != buff.end()) {
+            auto &line = *it;
+            auto del{true};
+            for (auto &c: line) {
+                if (c.first != L' ' && c.first != L'\n' && c.first != L'\t') {
+                    del = false;
+                    break;
+                }
+            }
+            if (del) {
+                ++it;
+                buff.pop(index);
+                continue;
+            }
+            ++index;
+            ++it;
+        }
     }
 } // namespace mtv

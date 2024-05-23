@@ -6,8 +6,8 @@ namespace mtv {
     class ListFactory {
     public:
         template<typename T>
-        static LinkedList<T> create_linked_list() {
-            return LinkedList<T>();
+        static LinkedList<T> *create_linked_list() {
+            return new LinkedList<T>();
         }
     };
 } // namespace mtv

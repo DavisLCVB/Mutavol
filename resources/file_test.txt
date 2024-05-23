@@ -3,8 +3,8 @@ int main(int argc, char *argv[]){
     /*
     Comentario de varias lineas
     */
-    print(h);
-    return 0;
+    print(h); /**/
+    return /*hola*/ 0;
 
 
 

@@ -17,13 +17,13 @@ namespace mtv {
             return *instance;
         }
 
-        void push(T element) {
-            this->push(element, buffer.get_size());
+        void push(const T &element) {
+            this->push(element, buffer->get_size());
         }
 
-        void push(T element, const size_t index) {
+        void push(const T &element, const size_t index) {
             try {
-                buffer.push(element, index);
+                buffer->push(element, index);
             } catch (std::exception &e) {
                 std::cerr << e.what() << std::endl;
             }
@@ -39,7 +39,7 @@ namespace mtv {
 
         void pop(const size_t index) {
             try {
-                buffer.pop(index);
+                buffer->pop(index);
             } catch (std::exception &e) {
                 std::cerr << e.what() << std::endl;
             }
@@ -47,19 +47,19 @@ namespace mtv {
 
         [[nodiscard]]
         size_t get_size() const {
-            return buffer.get_size();
+            return buffer->get_size();
         }
 
         T &get(size_t index) {
-            return buffer.get(index);
+            return buffer->get(index);
         }
 
         const T &get(size_t index) const {
-            return buffer.get(index);
+            return buffer->get(index);
         }
 
         T &operator[](size_t index) {
-            return buffer[index];
+            return buffer->get(index);
         }
 
         Buffer(const Buffer &) = delete;
@@ -67,24 +67,24 @@ namespace mtv {
         Buffer &operator=(const Buffer &) = delete;
 
         typename LinkedList<T>::Iterator begin() {
-            return buffer.begin();
+            return buffer->begin();
         }
 
         typename LinkedList<T>::Iterator end() {
-            return buffer.end();
+            return buffer->end();
         }
 
         typename LinkedList<T>::ConstIterator begin() const {
-            return buffer.begin();
+            return buffer->begin();
         }
 
         typename LinkedList<T>::ConstIterator end() const {
-            return buffer.end();
+            return buffer->end();
         }
 
     private:
         static std::unique_ptr<Buffer> instance;
-        LinkedList<T> buffer;
+        LinkedList<T> *buffer;
 
         Buffer() {
             buffer = ListFactory::create_linked_list<T>();

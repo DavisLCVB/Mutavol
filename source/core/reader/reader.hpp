@@ -38,7 +38,7 @@ namespace mtv {
 
         static void remove_comments();
 
-        static void remove_spaces();
+        static void remove_lines();
 
         explicit Reader(string input_file) : input_file(std::move(input_file)) {}
 
