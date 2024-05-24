@@ -55,7 +55,7 @@ como la posición (columna y fila) de cada caracter.
 ## Función `clean()`
 
 Esta función tiene la tarea de limpiar el archivo leído. Se eliminan los comentarios
-de línea y de bloque, además de las líneas vacías. Este método llama a 2 submétodos
+de línea y de bloque, además de las líneas vacías. Este método llama a 2 sub-métodos
 encargados de las acciones mencionadas anteriormente:
 
 ```cpp

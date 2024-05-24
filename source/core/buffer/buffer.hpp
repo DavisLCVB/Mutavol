@@ -14,10 +14,12 @@
 #include "../../utilities/data_structures/linked_list.hpp"
 #include "../../utilities/factory/list_fact.hpp"
 
+// Mutavol namespace
 namespace mtv {
     /**
     * @class Buffer
     * @brief Class to store data in a unique instance
+    * @tparam T Type of the elements to store
     */
     template<typename T>
     class Buffer {

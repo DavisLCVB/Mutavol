@@ -4,20 +4,21 @@
 
 #include <string>
 
-enum class TokenType
-{
-    IDENTIFIER,
-    OPERATOR,
-    DELIMITER,
-    KEYWORD,
-    LITERAL,
-    UNIDENTIFIED
-};
+// Mutavol namespace
+namespace mtv {
+    enum class TokenType {
+        IDENTIFIER,
+        OPERATOR,
+        DELIMITER,
+        KEYWORD,
+        LITERAL,
+        UNIDENTIFIED
+    };
 
-struct Token_t
-{
-    std::string lexem;
-    TokenType type;
-};
+    struct Token_t {
+        std::string lexem;
+        TokenType type;
+    };
+} // namespace mtv
 
 #endif // STRUCTS_HPP
