@@ -1,14 +1,20 @@
-# Reader
+# Reader ``mtv::Reader``
 
 La clase reader es la que tiene la tarea de leer el archivo y guardarlo en una
-estructura `Buffer`. La forma en que lo hace es siguiendo estos pasos:
+estructura `Buffer`.
 
 ## Tarea Principal
 
-Convertir el archivo a una estructura `Buffer<LinkedList<std::pair<wchar_t, 
+Convertir el archivo a una estructura `Buffer<LinkedList<std::pair<wchar_t,
 Position>>>` y limpiar los comentarios y líneas vacías que se encuentre.
 
+<div style="text-align: center;">
 <img src="../docs_resources/file_to_buff.png" alt="Conversión de archivo a Buffer">
+</div>
+
+## Características
+
+La clase `Reader` implementa el patrón de diseño *Singleton*.
 
 ## Función `verify()`
 
@@ -48,8 +54,8 @@ como la posición (columna y fila) de cada caracter.
 
 ## Función `clean()`
 
-Esta función tiene la tarea de limpiar el archivo leído. Se eliminan los comentarios 
-de línea y de bloque, además de las líneas vacías. Este método llama a 2 submétodos 
+Esta función tiene la tarea de limpiar el archivo leído. Se eliminan los comentarios
+de línea y de bloque, además de las líneas vacías. Este método llama a 2 submétodos
 encargados de las acciones mencionadas anteriormente:
 
 ```cpp
@@ -58,3 +64,5 @@ void Reader::clean() {
     remove_lines();
 }
 ```
+
+***Nota***: Consultar [Buffer](buffer.md) y [Position](position.md) para más información.

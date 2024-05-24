@@ -72,17 +72,20 @@ el archivo.
 - Paso 4: Se realiza una limpieza en la que se eliminan comentarios de una línea (`//`)
   y comentarios de bloque (`/* */`), además de suprimir líneas vacías.
 
+<div style="text-align: center;">
 <img src="docs_resources/file_to_buff.png" alt="Conversión de archivo a Buffer">
+</div>
 
 #### Características del código:
+
 - La clase `Reader` implementa el patrón de diseño *Singleton*.
-- La clase `Buffer` implementa el patrón de diseño *Singleton*, sin embargo, la clase 
-  hace uso de los templates por lo que cada tipo con la que se use, generará una nueva 
+- La clase `Buffer` implementa el patrón de diseño *Singleton*, sin embargo, la clase
+  hace uso de los templates por lo que cada tipo con la que se use, generará una nueva
   instancia *Singleton*.
-- Se crearon estructuras de datos auxiliares como listas enlazadas (`LinkedList`) y 
+- Se crearon estructuras de datos auxiliares como listas enlazadas (`LinkedList`) y
   `Position` para el manejo de la información del archivo.
 - Para las listas enlazadas se implementó el patrón de diseño *Iterator*.
-- Se implementó el patrón de diseño *Factory* para la creación de instancia de `Node` 
+- Se implementó el patrón de diseño *Factory* para la creación de instancia de `Node`
   y `LinkedList`.
 
-***Nota***: Mas información en [Reader](./docs/reader.md)
+***Nota***: Más información en [Reader](./docs/reader.md) y [Buffer](./docs/buffer.md).
