@@ -6,74 +6,52 @@ namespace mtv
 
     slicer *slicer::instance = nullptr;
 
-    slicer &slicer::get_instance(const std::vector<char> &test_buffer)
+    slicer &slicer::get_instance(mtv::Buffer<mtv::LinkedList<std::pair<wchar_t,mtv::Position>>>& bufferInstance)
     {
         if (!instance)
-            instance = new slicer(test_buffer);
+            instance = new slicer(bufferInstance);
         return *instance;
     }
     slicer &slicer::get_instance()
     {
+        if (!instance)
+            throw std::logic_error("slicer instance is not created yet.");
         return *instance;
     }
 
     void slicer::slice()
     {
-        while ((*(this->charcurrent) == ' ' || *(this->charcurrent) == '\n' || *(this->charcurrent) == '\t') &&
-               this->charcurrent != this->charend) {
-            this->charcurrent++;
-        }
-        if (charconcatenate())
-            return;
-        if (is_number())
-            return;
-        if (is_operator())
-            return;
-    }
-
-    const std::string slicer::getnext_token()
-    {
-        if (this->charcurrent == this->charend)
-        {
-            return "fin";
-        }
-        this->slice();
-        return this->tokens.back();
-    }
-
-    bool slicer::charconcatenate()
-    {
-        char c = *(this->charcurrent);
-        if (c >= 'a' && c <= 'z' || c == '_' || c >= 'A' && c <= 'Z')
-        {
-            std::string token;
-            while ((this->charcurrent) != charend && ((c >= 'a' && c <= 'z') ||
-                                                      (c >= '0' && c <= '9' || c >= 'A' && c <= 'Z') || c == '_'))
-            {
-                token.push_back(c);
-                (this->charcurrent)++;
-                if ((this->charcurrent) == this->charend)
+        for (auto &ll: *buffer) {
+            size_t index{0};
+            auto it = ll.begin();
+            auto charend = ll.end();
+            while (it != charend) {
+                while ((it->first == L' '|| it->first == L'\t') && it != charend) {
+                    ++it;
+                }
+                if (it == charend) {
                     break;
-                c = *(this->charcurrent);
+                }
+                if (!charconcatenate(it, charend) && !is_number(it, charend) && !is_operator(it, charend)) {
+                    ++it;
+                }
             }
-            tokens.push_back(token);
-            return true;
         }
-        return false;
     }
 
-    bool slicer::is_number()
+    bool slicer::charconcatenate(LinkedList<std::pair<wchar_t,mtv::Position>>::Iterator& it,
+                                 LinkedList<std::pair<wchar_t,mtv::Position>>::Iterator& charend)
     {
-        char c = *(this->charcurrent);
-        if (c >= '0' && c <= '9') {
-            std::string token;
-            while ((this->charcurrent) != charend && (c >= '0' && c <= '9') || c == '.')
-            {
+        wchar_t c = it->first;
+        if (c >= L'a' && c <= L'z' || c == L'_' || c >= L'A' && c <= L'Z') {
+            std::wstring token;
+            while (it != charend && ((c >= L'a' && c <= L'z') ||
+            (c >= L'0' && c <= L'9' || c >= L'A' && c <= L'Z') || c == L'_')) {
                 token.push_back(c);
-                (this->charcurrent)++;
-                if ((this->charcurrent) == this->charend)
+                ++it;
+                if (it == charend)
                     break;
-                c = *(this->charcurrent);
+                c = it->first;
             }
             tokens.push_back(token);
             return true;
@@ -81,19 +59,18 @@ namespace mtv
         return false;
     }
 
-    bool slicer::is_operator()
+    bool slicer::is_number(LinkedList<std::pair<wchar_t,mtv::Position>>::Iterator& it,
+                           LinkedList<std::pair<wchar_t,mtv::Position>>::Iterator& charend)
     {
-        char c = *(this->charcurrent);
-        if (operators.find(c) != std::string::npos)
-        {
-            std::string token;
-            token.push_back(c);
-            (this->charcurrent)++;
-            if ((this->charcurrent) != charend)
-            {
-                std::string double_symbol_token = token;
-                double_symbol_token.push_back(*(this->charcurrent));
-                case_double_symbols(double_symbol_token, token);
+        wchar_t c = it->first;
+        if (c >= L'0' && c <= L'9') {
+            std::wstring token;
+            while (it != charend && ((c >= L'0' && c <= L'9') || c == L'.')) {
+                token.push_back(c);
+                ++it;
+                if (it == charend)
+                    break;
+                c = it->first;
             }
             tokens.push_back(token);
             return true;
@@ -101,28 +78,47 @@ namespace mtv
         return false;
     }
 
-    void slicer::case_double_symbols(std::string &double_symbol_token, std::string &token)
+    bool slicer::is_operator(LinkedList<std::pair<wchar_t,mtv::Position>>::Iterator& it,
+                             LinkedList<std::pair<wchar_t,mtv::Position>>::Iterator& charend)
     {
-        if ((this->charcurrent) == this->charend)
+        wchar_t c0 = it->first;
+        char c1 = static_cast<char>(c0);
+        if (operators.find(c1) != std::string::npos) {
+            std::wstring token;
+            token.push_back(c0);
+            ++it;
+            if (it != charend) {
+                std::wstring double_symbol_token = token;
+                double_symbol_token.push_back(it->first);
+                case_double_symbols(double_symbol_token, token, it, charend);
+            }
+            tokens.push_back(token);
+            return true;
+        }
+        return false;
+    }
+
+    void slicer::case_double_symbols(std::wstring &double_symbol_token, std::wstring &token,
+                                     LinkedList<std::pair<wchar_t,mtv::Position>>::Iterator& it,
+                                     LinkedList<std::pair<wchar_t,mtv::Position>>::Iterator& charend)
+    {
+        if ( it == charend)
         {
             return;
         }
-        if (double_symbol_token == "&&" || double_symbol_token == "||" || double_symbol_token == "==" ||
-            double_symbol_token == "!=" ||
-            double_symbol_token == "<=" || double_symbol_token == ">=" || double_symbol_token == "++" ||
-            double_symbol_token == "--" ||
-            double_symbol_token == "+=" || double_symbol_token == "-=" || double_symbol_token == "*=" ||
-            double_symbol_token == "/=" ||
-            double_symbol_token == "%=" || double_symbol_token == "&=" || double_symbol_token == "|=" ||
-            double_symbol_token == "^=" ||
-            double_symbol_token == "<<=" || double_symbol_token == ">>=")
+        if (double_symbol_token == L"&&" || double_symbol_token == L"||" || double_symbol_token == L"==" ||
+            double_symbol_token == L"!=" || double_symbol_token == L"<=" || double_symbol_token == L">=" ||
+            double_symbol_token == L"++" || double_symbol_token == L"--" || double_symbol_token == L"+=" ||
+            double_symbol_token == L"-=" || double_symbol_token == L"*=" || double_symbol_token == L"/=" ||
+            double_symbol_token == L"%=" || double_symbol_token == L"&=" || double_symbol_token == L"|=" ||
+            double_symbol_token == L"^=" || double_symbol_token == L"<<=" || double_symbol_token == L">>=")
         {
             token = double_symbol_token;
-            (this->charcurrent)++;
+            ++it;
         }
     }
 
-    const std::vector<std::string> slicer::get_tokens() const
+    const std::vector<std::wstring> slicer::get_tokens() const
     {
         return tokens;
     }

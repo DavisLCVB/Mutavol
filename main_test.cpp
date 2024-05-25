@@ -12,6 +12,9 @@ int main(int argc, char *argv[]) {
     //auto t_classifier{test_classifier(argc, argv)};
     //std::cout << "Test Classifier exit code: " << t_classifier << "\n";
     separator();
+    auto t_slicer{test_slicer(argc, argv)};
+    std::cout << "Test Slicer exit code: " << t_slicer << "\n";
+    separator();
     return 0;
 }
 
