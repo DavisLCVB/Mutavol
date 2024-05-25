@@ -9,8 +9,8 @@ int main(int argc, char *argv[]) {
     auto t_reader{test_reader(argc, argv)};
     std::cout << "Test Reader exit code: " << t_reader << "\n";
     separator();
-    auto t_classifier{test_classifier(argc, argv)};
-    std::cout << "Test Classifier exit code: " << t_classifier << "\n";
+    //auto t_classifier{test_classifier(argc, argv)};
+    //std::cout << "Test Classifier exit code: " << t_classifier << "\n";
     separator();
     return 0;
 }

@@ -5,3 +5,5 @@ cmake-build-debug
 .ccls-cache/
 .replit
 replit.nix
+cmake-build-release
+msvc-debug

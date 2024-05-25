@@ -34,10 +34,10 @@ de banderas o *flags*.
 
 Las banderas posibles del programa se detallan a continuación:
 
-- `--version`: Muestra la versión del programa.
-- `--help`: Muestra la ayuda del programa.
-- `--i <input_file>`: Especifica el archivo de entrada.
-- `--o <output_file>`: Especifica el archivo de salida. *
+- `-h` o `--help`: Muestra la ayuda del programa.
+- `-v` o `--version`: Muestra la versión del programa.
+- `-i` o `--input`: Especifica el archivo de entrada.
+- `-o` o `--output`: Especifica el archivo de salida.
 
 \* Si no se especifica un archivo de salida, el programa imprimirá en la salida
 estándar.
@@ -46,6 +46,8 @@ Si el programa recibe una bandera no reconocida, se mostrará un mensaje de erro
 cerrará. De igual forma, si el programa recibe una bandera que requiere un argumento o
 si no se especifica una bandera que lo requiera, se finalizará la ejecución del
 programa.
+
+***Nota***: Más información en [Args](./docs/args.md).
 
 #### Características del código:
 

@@ -1,11 +1,12 @@
 #include "../source/core/classifier/classifier.hpp"
+#include "../source/utilities/data_structures/types.hpp"
 #include <iostream>
-std::string enumToString(TokenType type);
+std::string enumToString(mtv::TokenType type);
 
 int test_classifier(const int argc, char *argv[])
 {
     mtv::Classifier &classifier = mtv::Classifier::get_instance();
-    Token_t tok;
+    mtv::Token_t tok;
     for (int i = 0; i < 27; i++)
     {
         tok = classifier.next_token();
@@ -14,21 +15,21 @@ int test_classifier(const int argc, char *argv[])
     return 0;
 }
 
-std::string enumToString(TokenType type)
+std::string enumToString(mtv::TokenType type)
 {
     switch (type)
     {
-    case TokenType::IDENTIFIER:
+    case mtv::TokenType::IDENTIFIER:
         return "IDENTIFIER";
-    case TokenType::OPERATOR:
+    case mtv::TokenType::OPERATOR:
         return "OPERATOR";
-    case TokenType::DELIMITER:
+    case mtv::TokenType::DELIMITER:
         return "DELIMITER";
-    case TokenType::KEYWORD:
+    case mtv::TokenType::KEYWORD:
         return "KEYWORD";
-    case TokenType::LITERAL:
+    case mtv::TokenType::LITERAL:
         return "LITERAL";
-    case TokenType::UNIDENTIFIED:
+    case mtv::TokenType::UNIDENTIFIED:
         return "UNIDENTIFIED";
     }
 

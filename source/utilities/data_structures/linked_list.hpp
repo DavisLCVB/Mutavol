@@ -9,6 +9,7 @@
 
 //Include section
 #include <functional>
+#include <stdexcept>
 
 #include "../factory/node_fact.hpp"
 
@@ -162,6 +163,22 @@ namespace mtv {
                 current = current->get_next();
             }
             return current->get_data();
+        }
+
+        /**
+         * @brief Method to check if the element is in the list
+         * @return true if the element is in the list, false otherwise
+         */
+        [[nodiscard]]
+        bool contains(const T &data) const {
+            auto current = head;
+            while (current != nullptr) {
+                if (current->get_data() == data) {
+                    return true;
+                }
+                current = current->get_next();
+            }
+            return false;
         }
 
         /**

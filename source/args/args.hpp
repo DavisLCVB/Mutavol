@@ -9,150 +9,166 @@
  */
 
 // Include section
-#include "config.hpp"
-#include "templates.hpp"
-#include <string>
-#include <vector>
-#include <iostream>
-#include <filesystem>
-#include <mutex>
 
+#include <string>
+#include <utility>
+#include "config.hpp"
+
+#include "../utilities/data_structures/linked_list.hpp"
+
+// Mutavol namespace
 namespace mtv {
     /**
      * @class Args
      * @brief Class to handle command line arguments
-     * @author Davis Cartagena
      */
-    class Args final {
+    class Args {
     public:
         /**
-         * @brief Gets the instance of the Args class
-         * @return The instance of the Args class
-         */
-        static Args &get_instance();
-
-        /**
-         * @brief Gets the instance of the Args class
-         * @param argc Number of arguments
-         * @param argv Array of arguments
-         * @return The instace of the Args class, with the arguments set
-         */
-        static Args &get_instance(int argc, char *argv[]);
-
-        /**
-         * @brief Starts the process of reading and setting the arguments
-         */
-        void recon();
-
-        /**
-         * @brief Checks if the program should exit
-         * @return True if the program should exit, false otherwise
-         */
-        [[nodiscard]]
-        bool should_exit() const { return exit; }
-
-        /**
-         * @brief Gets a copy of the output file path
-         * @return  A copy of the output file path
-         */
-        [[nodiscard]]
-        std::string get_output_file() const { return output_file; }
-
-        /**
-         * @brief Gets a copy of the input file path
-         * @return A copy of the input file path
-         */
-        [[nodiscard]]
-        std::string get_input_file() const { return input_file; }
-
-        /**
-         * @brief Deleted copy constructor
-         */
-        Args(const Args &) = delete;
-
-        /**
-         * @brief Deleted copy assignment operator
-         */
-        Args &operator=(const Args &) = delete;
-
-        /**
-        * @brief Destructor
+        * @struct ArgsResult
+        * @brief Struct to store the result of the command line arguments process
         */
-        ~Args() = default;
+        struct ArgsResult;
+
+        /**
+         * @brief A method to process command line arguments
+         * @param argc Quantity of arguments
+         * @param argv Values of arguments
+         * @return A struct with the result of the process
+         */
+        static ArgsResult process_args(int argc, char *argv[]);
 
     private:
-        // Instace of the class, to be used as a singleton
-        static std::unique_ptr<Args> instance;
-        // Flag to ensure the instance is only created once
-        static std::once_flag init_instance_flag;
-
-        // Vector of arguments
-        std::vector<std::string> args;
-        // Input file path
-        std::string input_file{};
-        // Output file path
-        std::string output_file{};
-        // Index of the current argument
-        int index{0};
-        // Flag to determine if the program should exit
-        bool exit{false};
-        // Flag to determine if the input file has been set
-        bool input_file_set{false};
+        // Template of arguments
+        static LinkedList<std::string> *args_template;
+        // List of arguments
+        static LinkedList<std::string> *args;
+        // Input file
+        static std::string input_file;
+        // Output file
+        static std::string output_file;
 
         /**
-         * @brief Method to initialize the instance of the class
-         * @param argc Number of arguments
-         * @param argv Array of arguments
+         * @brief Method to initialize the template of arguments
          */
-        static void init_instance(int argc, char *argv[]);
+        static void initialize_templates();
 
         /**
-         * @brief Method to get the next argument
-         * @return The next argument
+         * @brief Method to check the quantity of arguments
+         * @param argc Quantity of arguments
+         * @return true if the quantity of arguments is greater or equal to 2
          */
-        std::string get();
+        static bool check_number_of_args(int argc);
 
         /**
-         * @brief Process the argument that sets the output file
-         * @param val Value of the argument
+         * @brief Method to convert the arguments (char**) to a LinkedList
+         * @param argc Quantity of arguments
+         * @param argv Values of arguments
+         * @see LinkedList
          */
-        void process_output(const std::string &val);
+        static void convert_args_to_list(int argc, char *argv[]);
 
         /**
-         * @brief Process the argument that sets the input file
-         * @param val Value of the argument
+         * @brief Method to analyze the list of arguments
+         * @return A struct with the result of the process
          */
-        void process_input(const std::string &val);
+        static ArgsResult analize_list();
 
         /**
-         * @brief Writes the version of the program to the standard output,
-         * sets the exit flag to true and returns
+         * @brief Method to process the help argument
          */
-        void process_version();
+        static void process_help();
 
         /**
-         * @brief Writes the help message to the standard output,
-         * sets the exit flag to true and returns
+         * @brief Method to process the version argument
          */
-        void process_help();
+        static void process_version();
 
         /**
-         * @brief Gets the current path of the program
-         * @return The current path of the program
+         * @brief Method to process the input argument
+         * @param input_param The input file
          */
-        static std::filesystem::path get_current_path();
+        static void process_input(const std::string &input_param);
 
         /**
-         * @brief Default constructor
+         * @brief Method to process the output argument
+         * @param output_param The output file
          */
-        Args() = default;
+        static void process_output(const std::string &output_param);
 
         /**
-         * @brief Constructor with arguments
-         * @param argc Number of arguments
-         * @param argv Array of arguments
+         * @brief Method to exit in the case of a incorrect process of the arguments
+         * @param message The message to show
+         * @return A struct with the result of the process
          */
-        Args(int argc, char *argv[]);
+        static ArgsResult bad_exit_process(const std::string &message);
+
+        /**
+         * @brief Method to get a path of a file (can contain .\ or ..\)
+         * @param file The file to process
+         * @param param The parameter to process
+         */
+        static void process_file(std::string &file, const std::string &param);
+
+        /**
+         * @brief Method to get a full path of a file
+         * @param file The file to preprocess
+         */
+        static void preprocess_file(std::string &file);
+
+        /**
+         * @brief Method to check if a file is a full path
+         * @param file The file to check
+         * @return true if the file is a full path
+         */
+        static bool is_full_path(const std::string &file);
+
+        /**
+         * @brief Method to convert a windows path to a linux path
+         * @param path The path to convert
+         */
+        static void win_to_linux_fmt(std::string &path);
+    };
+
+
+    struct Args::ArgsResult {
+        // true if the arguments were processed
+        bool args_processed{false};
+        // true if the program should exit
+        bool should_exit{false};
+        // input file
+        std::string input{};
+        // output file
+        std::string output{};
+
+        /**
+         * @brief Constructor
+         * @param args_processed If the arguments were processed
+         * @param should_exit If the program should exit
+         */
+        ArgsResult(const bool args_processed,
+                   const bool should_exit) : args_processed
+                                             (args_processed),
+                                             should_exit(
+                                                 should_exit) {}
+
+        /**
+         * @brief Full constructor
+         * @param args_processed If the arguments were processed
+         * @param should_exit If the program should exit
+         * @param input The input file
+         * @param output The output file
+         */
+        ArgsResult(const bool args_processed, const bool should_exit,
+                   std::string input,
+                   std::string output) : args_processed(
+                                             args_processed),
+                                         should_exit(
+                                             should_exit),
+                                         input(std::move(input)),
+                                         output(std::move(output)) {}
+
+        ArgsResult() = default;
     };
 } // namespace mtv
 

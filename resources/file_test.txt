@@ -1,16 +1,7 @@
-int main(int argc, char *argv[]){
-    int h = 0;
+entero main(entero argc, char argv)
+    entero h = 0;
     /*
     Comentario de varias lineas
     */
-    print(h); /**/
-    return /*hola*/ 0;
-
-
-
-// XDDDDD
-
-
-
-    // Comentario de una linea
-}
+    imprimir(h); /**/
+    regresar /*hola*/ 0;
