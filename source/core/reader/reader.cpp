@@ -70,6 +70,10 @@ namespace mtv {
                 ++column;
             }
         }
+        if (!ll->is_empty()) {
+            buff.push(*ll);
+        }
+        delete ll;
         return true;
     }
 
@@ -111,7 +115,8 @@ namespace mtv {
                     if (it->first == L'*' && (it + 1) != ll.end() && (it + 1)->first ==
                         L'/') {
                         block_comment = false;
-                        ++it++;
+                        ++it;
+                        ++it;
                         ll.pop(index);
                         ll.pop(index);
                     } else {

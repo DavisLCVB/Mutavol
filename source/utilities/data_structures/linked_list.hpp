@@ -139,6 +139,15 @@ namespace mtv {
         }
 
         /**
+         * @brief Method to check if the list is empty
+         * @return true if the list is empty, false otherwise
+         */
+        [[nodiscard]]
+        bool is_empty() const {
+            return size == 0;
+        }
+
+        /**
          * @brief Gets the element at the specified position
          * @param index The position of the element to be retrieved
          * @return A reference to the element at the specified position
