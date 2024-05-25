@@ -5,7 +5,7 @@
 #include "../source/utilities/data_structures/position.hpp"
 int test_slicer(const int argc, char *argv[]){
 
-    mtv::slicer &slicer = mtv::slicer::get_instance(mtv::Buffer<mtv::LinkedList<std::pair<wchar_t, mtv::Position> > >::get_instance());
+    mtv::slicer &slicer = mtv::slicer::get_instance();
 
     slicer.slice();
     for(const auto &token : slicer.get_tokens()){

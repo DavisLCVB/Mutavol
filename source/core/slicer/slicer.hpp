@@ -11,26 +11,21 @@
 namespace mtv {
     class slicer{
     private:
-        static slicer* instance;
-        mtv::Buffer<mtv::LinkedList<std::pair<wchar_t,mtv::Position>>>* buffer;
+        static std::unique_ptr<slicer> instance;
         std::vector<std::wstring> tokens;
 
-        // Constructor privado
-        explicit slicer(mtv::Buffer<mtv::LinkedList<std::pair<wchar_t,mtv::Position>>>& bufferInstance)
-            : buffer(&bufferInstance) {}
+        slicer() = default;
+        static void init_instance();
 
     public:
         slicer(slicer const&) = delete;
-        slicer() = delete;
-
-        static slicer &get_instance(mtv::Buffer<mtv::LinkedList<std::pair<wchar_t,mtv::Position>>>& bufferInstance);
+        slicer &operator=(const slicer &) = delete;
 
         static slicer &get_instance();
 
         static const std::string operators;
 
         void slice();
-
         const std::wstring getnext_token();
 
         bool charconcatenate(LinkedList<std::pair<wchar_t,mtv::Position>>::Iterator& it,
