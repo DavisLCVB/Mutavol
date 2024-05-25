@@ -21,7 +21,7 @@ namespace mtv
 
     void slicer::slice()
     {
-        for (auto &ll: *buffer) {
+        for (auto &ll: mtv::Buffer<mtv::LinkedList<std::pair<wchar_t,mtv::Position>>>::get_instance()) {
             size_t index{0};
             auto it = ll.begin();
             auto charend = ll.end();
