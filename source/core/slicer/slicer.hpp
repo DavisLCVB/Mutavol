@@ -5,37 +5,48 @@
 #include <iostream>
 #include <vector>
 #include <memory>
+#include "../buffer/buffer.hpp"
+#include "../../utilities/data_structures/position.hpp"
 
 namespace mtv {
     class slicer{
     private:
         static slicer* instance;
-        std::vector<char> test_buffer;
-        std::vector<char>::iterator charcurrent;
-        std::vector<char>::iterator charend;
-        slicer(const std::vector<char> &test_buffer) : test_buffer(test_buffer) {
-            charcurrent = this->test_buffer.begin();
-            charend = this->test_buffer.end();
-        }
-        std::vector<std::string> tokens;
+        mtv::Buffer<mtv::LinkedList<std::pair<wchar_t,mtv::Position>>>* buffer;
+        std::vector<std::wstring> tokens;
+
+        // Constructor privado
+        explicit slicer(mtv::Buffer<mtv::LinkedList<std::pair<wchar_t,mtv::Position>>>& bufferInstance)
+            : buffer(&bufferInstance) {}
 
     public:
         slicer(slicer const&) = delete;
         slicer() = delete;
-        static slicer &get_instance(const std::vector<char>& test_buffer);
+
+        static slicer &get_instance(mtv::Buffer<mtv::LinkedList<std::pair<wchar_t,mtv::Position>>>& bufferInstance);
+
         static slicer &get_instance();
 
         static const std::string operators;
 
         void slice();
-        const std::string getnext_token();
-        bool charconcatenate();
-        bool is_number();
-        bool is_operator();
-        void case_double_symbols(std::string &double_symbol_token, std::string &token);
-        const std::vector<std::string> get_tokens() const;
 
+        const std::wstring getnext_token();
+
+        bool charconcatenate(LinkedList<std::pair<wchar_t,mtv::Position>>::Iterator& it,
+                             LinkedList<std::pair<wchar_t,mtv::Position>>::Iterator& charend);
+
+        bool is_number(LinkedList<std::pair<wchar_t,mtv::Position>>::Iterator& it,
+                       LinkedList<std::pair<wchar_t,mtv::Position>>::Iterator& charend);
+
+        bool is_operator(LinkedList<std::pair<wchar_t,mtv::Position>>::Iterator& it,
+                         LinkedList<std::pair<wchar_t,mtv::Position>>::Iterator& charend);
+
+        void case_double_symbols(std::wstring &double_symbol_token, std::wstring &token,
+                                 LinkedList<std::pair<wchar_t,mtv::Position>>::Iterator& it,
+                                 LinkedList<std::pair<wchar_t,mtv::Position>>::Iterator& charend);
+
+        const std::vector<std::wstring> get_tokens() const;
     };
-
 } // namespace mtv
 #endif // Slicer_HPP
