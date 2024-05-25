@@ -4,20 +4,19 @@ namespace mtv
 {
     const std::string slicer::operators = "\"\'#,;(){}[]=*/-+<>&|!~^%?:.";
 
-    slicer *slicer::instance = nullptr;
+    std::unique_ptr<slicer> slicer::instance = nullptr;
 
-    slicer &slicer::get_instance(mtv::Buffer<mtv::LinkedList<std::pair<wchar_t,mtv::Position>>>& bufferInstance)
-    {
-        if (!instance)
-            instance = new slicer(bufferInstance);
-        return *instance;
+    void slicer::init_instance() {
+        instance.reset(new slicer());
     }
     slicer &slicer::get_instance()
     {
-        if (!instance)
-            throw std::logic_error("slicer instance is not created yet.");
+        if (instance == nullptr){
+            instance.reset(new slicer());
+        }
         return *instance;
     }
+
 
     void slicer::slice()
     {
