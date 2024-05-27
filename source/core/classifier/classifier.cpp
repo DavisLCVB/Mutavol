@@ -69,7 +69,7 @@ namespace mtv {
         is_literal();
     }
 
-    Token_t Classifier::next_token() {
+    Token_t& Classifier::next_token() {
         classify();
         return this->tok;
     }

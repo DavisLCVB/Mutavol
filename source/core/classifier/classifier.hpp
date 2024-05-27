@@ -37,7 +37,7 @@ namespace mtv {
 
         void classify();
 
-        Token_t next_token();
+        Token_t& next_token();
 
         bool is_identifier();
 
