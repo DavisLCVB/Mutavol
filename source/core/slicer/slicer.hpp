@@ -2,46 +2,48 @@
 #define Slicer_HPP
 
 #include <string>
-#include <iostream>
 #include <vector>
 #include <memory>
 #include "../buffer/buffer.hpp"
 #include "../../utilities/data_structures/position.hpp"
 
 namespace mtv {
-    class slicer{
-    private:
-        static std::unique_ptr<slicer> instance;
-        std::vector<std::wstring> tokens;
-
-        slicer() = default;
-        static void init_instance();
-
+    class Slicer {
     public:
-        slicer(slicer const&) = delete;
-        slicer &operator=(const slicer &) = delete;
+        using LL_Iterator = LinkedList<std::pair<wchar_t, Position> >::Iterator;
 
-        static slicer &get_instance();
+        Slicer(Slicer const &) = delete;
 
-        static const std::string operators;
+        Slicer &operator=(const Slicer &) = delete;
+
+        static Slicer &get_instance();
 
         void slice();
-        const std::wstring getnext_token();
 
-        bool charconcatenate(LinkedList<std::pair<wchar_t,mtv::Position>>::Iterator& it,
-                             LinkedList<std::pair<wchar_t,mtv::Position>>::Iterator& charend);
+        std::wstring get_next_token();
 
-        bool is_number(LinkedList<std::pair<wchar_t,mtv::Position>>::Iterator& it,
-                       LinkedList<std::pair<wchar_t,mtv::Position>>::Iterator& charend);
+        [[nodiscard]]
+        std::vector<std::wstring> get_tokens() const;
 
-        bool is_operator(LinkedList<std::pair<wchar_t,mtv::Position>>::Iterator& it,
-                         LinkedList<std::pair<wchar_t,mtv::Position>>::Iterator& charend);
+    private:
+        static std::unique_ptr<Slicer> instance;
+        std::vector<std::wstring> tokens;
+        static const std::string operators;
+        static LinkedList<std::wstring> double_symbols;
 
-        void case_double_symbols(std::wstring &double_symbol_token, std::wstring &token,
-                                 LinkedList<std::pair<wchar_t,mtv::Position>>::Iterator& it,
-                                 LinkedList<std::pair<wchar_t,mtv::Position>>::Iterator& charend);
+        Slicer() = default;
 
-        const std::vector<std::wstring> get_tokens() const;
+        static void init_instance();
+
+        bool char_concatenate(LL_Iterator &it, const LL_Iterator &charend);
+
+        bool is_number(LL_Iterator &it, const LL_Iterator &charend);
+
+        bool is_operator(LL_Iterator &it, const LL_Iterator &charend);
+
+        static void case_double_symbols(const std::wstring &double_symbol_token,
+                                        std::wstring &token, LL_Iterator &it,
+                                        const LL_Iterator &charend);
     };
 } // namespace mtv
 #endif // Slicer_HPP

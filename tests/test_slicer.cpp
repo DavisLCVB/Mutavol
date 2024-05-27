@@ -1,15 +1,12 @@
-#include "../source/core/slicer/slicer.hpp"
 #include<iostream>
-#include<cassert>
-#include "../source/core/buffer/buffer.hpp"
-#include "../source/utilities/data_structures/position.hpp"
-int test_slicer(const int argc, char *argv[]){
+#include "../source/mutavol"
 
-    mtv::slicer &slicer = mtv::slicer::get_instance();
+int test_slicer(const int argc, char *argv[]) {
+    mtv::Slicer &slicer = mtv::Slicer::get_instance();
 
     slicer.slice();
-    for(const auto &token : slicer.get_tokens()){
-        std::wcout <<"token : "<< token << std::endl;
+    for (const auto &token: slicer.get_tokens()) {
+        std::wcout << "token : " << token << std::endl;
     }
     return 0;
 }

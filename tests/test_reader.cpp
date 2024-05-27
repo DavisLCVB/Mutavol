@@ -9,13 +9,11 @@ int test_reader(const int argc, char *argv[]) {
     if (r.should_exit) {
         return 0;
     }
-    auto &reader = mtv::Reader::get_instance(r.input);
-    if (!reader.read()) return 1;
-    auto &buff = mtv::Buffer<mtv::LinkedList<std::pair<wchar_t,
-        mtv::Position> > >::get_instance();
-    for(auto &line : buff) {
-        for(auto &pair : line) {
-            std::wcout << pair.first;
+    if (const auto &reader = mtv::Reader::get_instance(r.input); !reader.read()) return 1;
+    for (auto &buff = mtv::Buffer<mtv::LinkedList<std::pair<wchar_t,
+             mtv::Position> > >::get_instance(); auto &line: buff) {
+        for (const auto &[fst, snd]: line) {
+            std::wcout << fst;
         }
     }
     std::cout << "\n";

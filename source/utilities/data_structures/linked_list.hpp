@@ -39,6 +39,13 @@ namespace mtv {
             }
         }
 
+        LinkedList(std::initializer_list<T> list) : head(nullptr), tail(nullptr),
+                                                    size(0) {
+            for (const auto &element: list) {
+                push(element);
+            }
+        }
+
         /**
          * @brief Adds an element to the end of the list
          * @param data The data to be added

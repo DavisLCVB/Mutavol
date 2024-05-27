@@ -5,8 +5,7 @@
 #include "args/args.hpp"
 #include "core/reader/reader.hpp"
 #include "core/buffer/buffer.hpp"
-#include "utilities/data_structures/linked_list.hpp"
-#include "utilities/data_structures/position.hpp"
 #include "core/classifier/classifier.hpp"
+#include "core/slicer/slicer.hpp"
 
 #endif // MUTAVOL
