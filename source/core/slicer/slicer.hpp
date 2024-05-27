@@ -6,6 +6,7 @@
 #include <memory>
 #include "../buffer/buffer.hpp"
 #include "../../utilities/data_structures/position.hpp"
+#include "../../utilities/data_structures/types.hpp"
 
 namespace mtv {
     class Slicer {
@@ -20,14 +21,14 @@ namespace mtv {
 
         void slice();
 
-        std::wstring get_next_token();
+        Token_t get_next_token();
 
         [[nodiscard]]
-        std::vector<std::wstring> get_tokens() const;
+        LinkedList<Token_t>  get_tokens() const;
 
     private:
         static std::unique_ptr<Slicer> instance;
-        std::vector<std::wstring> tokens;
+        LinkedList<Token_t> tokens;
         static const std::string operators;
         static LinkedList<std::wstring> double_symbols;
 

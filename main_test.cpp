@@ -4,17 +4,8 @@
 
 void separator();
 
-int main(int argc, char *argv[]) {
-    std::cout << "Running tests\n";
-    auto t_reader{test_reader(argc, argv)};
-    std::cout << "Test Reader exit code: " << t_reader << "\n";
-    separator();
-    //auto t_classifier{test_classifier(argc, argv)};
-    //std::cout << "Test Classifier exit code: " << t_classifier << "\n";
-    separator();
-    auto t_slicer{test_slicer(argc, argv)};
-    std::cout << "Test Slicer exit code: " << t_slicer << "\n";
-    separator();
+int main(const int argc, char *argv[]) {
+    coin_test(argc, argv);
     return 0;
 }
 

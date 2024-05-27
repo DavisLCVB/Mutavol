@@ -49,6 +49,7 @@ namespace mtv {
         if (wchar_t c = it->first; c >= L'a' && c <= L'z' || c == L'_' || c >= L'A' && c
                                    <= L'Z') {
             std::wstring token;
+            const auto pos = it->second;
             while (it != charend && ((c >= L'a' && c <= L'z') ||
                                      (c >= L'0' && c <= L'9' || c >= L'A' && c <= L'Z') ||
                                      c == L'_')) {
@@ -58,7 +59,7 @@ namespace mtv {
                     break;
                 c = it->first;
             }
-            tokens.push_back(token);
+            tokens.push({token, TokenType::UNIDENTIFIED, pos});
             return true;
         }
         return false;
@@ -67,6 +68,7 @@ namespace mtv {
     bool Slicer::is_number(LL_Iterator &it, const LL_Iterator &charend) {
         if (wchar_t c = it->first; c >= L'0' && c <= L'9') {
             std::wstring token;
+            const auto pos = it->second;
             while (it != charend && ((c >= L'0' && c <= L'9') || c == L'.')) {
                 token.push_back(c);
                 ++it;
@@ -74,7 +76,7 @@ namespace mtv {
                     break;
                 c = it->first;
             }
-            tokens.push_back(token);
+            tokens.push({token, TokenType::UNIDENTIFIED, pos});
             return true;
         }
         return false;
@@ -86,13 +88,14 @@ namespace mtv {
             operators.find(c1) != std::string::npos) {
             std::wstring token;
             token.push_back(c0);
+            const auto pos = it->second;
             ++it;
             if (it != charend) {
                 std::wstring double_symbol_token = token;
                 double_symbol_token.push_back(it->first);
                 case_double_symbols(double_symbol_token, token, it, charend);
             }
-            tokens.push_back(token);
+            tokens.push({token, TokenType::UNIDENTIFIED, pos});
             return true;
         }
         return false;
@@ -110,16 +113,16 @@ namespace mtv {
         }
     }
 
-    std::vector<std::wstring> Slicer::get_tokens() const {
+    LinkedList<Token_t> Slicer::get_tokens() const {
         return tokens;
     }
 
-    std::wstring Slicer::get_next_token() {
-        if (tokens.empty()) {
-            return L"";
+    Token_t Slicer::get_next_token() {
+        if (tokens.is_empty()) {
+            return {L"", TokenType::UNIDENTIFIED, Position()};
         }
-        std::wstring token = tokens.front();
-        tokens.erase(tokens.begin());
-        return token;
+        auto t = tokens[0];
+        tokens.pop(0);
+        return t;
     }
 } // namespace mtv

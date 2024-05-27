@@ -12,7 +12,8 @@ file(GLOB TEST "tests/*.cpp" "main_test.cpp")
 file(GLOB MAIN "main.cpp")
 
 add_executable(mtv ${SOURCES} ${MAIN})
-add_executable(mtvt ${SOURCES} ${TEST})
+add_executable(mtvt ${SOURCES} ${TEST}
+        tests/cointegrated_test.cpp)
 
 target_include_directories(mtv PRIVATE ${CMAKE_BINARY_DIR})
 target_include_directories(mtvt PRIVATE ${CMAKE_BINARY_DIR})

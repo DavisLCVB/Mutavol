@@ -17,15 +17,12 @@
 namespace mtv {
     class Classifier {
     public:
-        // Cadena de prueba que sustituye temporalmente a slicer
-        int test_string_index = 0;
-        static const std::vector<std::string> TEST_STRINGS;
 
-        static const std::string IDENTIFIERS;
-        static const std::string OPERATORS;
-        static const std::string DELIMITERS;
-        static const std::string KEYWORDS;
-        static const std::string LITERALS;
+        static const std::wstring IDENTIFIERS;
+        static const std::wstring OPERATORS;
+        static const std::wstring DELIMITERS;
+        static const std::wstring KEYWORDS;
+        static const std::wstring LITERALS;
 
         ~Classifier() = default;
 
@@ -34,6 +31,8 @@ namespace mtv {
         Classifier &operator=(const Classifier &) = delete;
 
         static Classifier &get_instance();
+
+        static void init_slicer();
 
         void classify();
 

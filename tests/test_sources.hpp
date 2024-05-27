@@ -7,4 +7,6 @@ int test_reader(const int argc, char *argv[]);
 
 int test_slicer(const int argc, char *argv[]);
 
+int coin_test(const int argc, char *argv[]);
+
 #endif //TEST_SOURCES_HPP
