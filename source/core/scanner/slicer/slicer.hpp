@@ -2,14 +2,13 @@
 #define Slicer_HPP
 
 #include <string>
-#include <vector>
 #include <memory>
-#include "../buffer/buffer.hpp"
-#include "../../utilities/data_structures/position.hpp"
-#include "../../utilities/data_structures/types.hpp"
+
+#include "../../../utils/utils.hpp"
+#include "../scanner.hpp"
 
 namespace mtv {
-    class Slicer {
+    class Scanner::Slicer {
     public:
         using LL_Iterator = LinkedList<std::pair<wchar_t, Position> >::Iterator;
 
@@ -24,7 +23,7 @@ namespace mtv {
         Token_t get_next_token();
 
         [[nodiscard]]
-        LinkedList<Token_t>  get_tokens() const;
+        LinkedList<Token_t> get_tokens() const;
 
     private:
         static std::unique_ptr<Slicer> instance;

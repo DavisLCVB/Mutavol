@@ -3,9 +3,7 @@
 #define MUTAVOL
 
 #include "args/args.hpp"
-#include "core/reader/reader.hpp"
+#include "core/scanner/scanner.hpp"
 #include "core/buffer/buffer.hpp"
-#include "core/classifier/classifier.hpp"
-#include "core/slicer/slicer.hpp"
 
 #endif // MUTAVOL

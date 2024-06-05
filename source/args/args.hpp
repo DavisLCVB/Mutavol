@@ -14,7 +14,7 @@
 #include <utility>
 #include "config.hpp"
 
-#include "../utilities/data_structures/linked_list.hpp"
+#include "../utils/utils.hpp"
 
 // Mutavol namespace
 namespace mtv {

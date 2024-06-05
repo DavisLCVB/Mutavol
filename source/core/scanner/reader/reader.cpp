@@ -4,24 +4,24 @@
 #include <ranges>
 #include <vector>
 
-#include "../../utilities/data_structures/position.hpp"
-#include "../buffer/buffer.hpp"
+#include "../../../utils/utils.hpp"
+#include "../../buffer/buffer.hpp"
 
 namespace mtv {
-    std::unique_ptr<Reader> Reader::instance = nullptr;
+    std::unique_ptr<Scanner::Reader> Scanner::Reader::instance = nullptr;
 
-    void Reader::init_instance(const std::string &input_file) {
+    void Scanner::Reader::init_instance(const std::string &input_file) {
         instance.reset(new Reader(input_file));
     }
 
-    Reader &Reader::get_instance(const std::string &input_file) {
+    Scanner::Reader &Scanner::Reader::get_instance(const std::string &input_file) {
         if (instance == nullptr) {
             init_instance(input_file);
         }
         return *instance;
     }
 
-    bool Reader::read() const {
+    bool Scanner::Reader::read() const {
         if (!verify()) {
             std::cerr << "Error: Invalid input file." << std::endl;
             return false;
@@ -39,7 +39,7 @@ namespace mtv {
         return true;
     }
 
-    bool Reader::verify() const {
+    bool Scanner::Reader::verify() const {
         std::ifstream file(input_file);
         if (!file.is_open()) {
             return false;
@@ -48,7 +48,7 @@ namespace mtv {
         return true;
     }
 
-    bool Reader::read_file() const {
+    bool Scanner::Reader::read_file() const {
         using pair = std::pair<wchar_t, Position>;
         std::wifstream file(input_file);
         if (!file.is_open()) {
@@ -77,12 +77,12 @@ namespace mtv {
         return true;
     }
 
-    void Reader::clean() {
+    void Scanner::Reader::clean() {
         remove_comments();
         remove_lines();
     }
 
-    void Reader::remove_comments() {
+    void Scanner::Reader::remove_comments() {
         auto &buff = Buffer<LinkedList<std::pair<wchar_t, Position> > >::get_instance();
         size_t line_comment{0};
         bool block_comment{false};
@@ -131,7 +131,7 @@ namespace mtv {
         }
     }
 
-    void Reader::remove_lines() {
+    void Scanner::Reader::remove_lines() {
         auto &buff = Buffer<LinkedList<std::pair<wchar_t, Position> > >::get_instance();
         size_t index{0};
         auto it{buff.begin()};

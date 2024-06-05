@@ -1,11 +1,12 @@
 #include "slicer.hpp"
+#include "../../buffer/buffer.hpp"
 
 namespace mtv {
-    const std::string Slicer::operators = "\"\'#,;(){}[]=*/-+<>&|!~^%?:.";
+    const std::string Scanner::Slicer::operators = "\"\'#,;(){}[]=*/-+<>&|!~^%?:.";
 
-    std::unique_ptr<Slicer> Slicer::instance = nullptr;
+    std::unique_ptr<Scanner::Slicer> Scanner::Slicer::instance = nullptr;
 
-    LinkedList<std::wstring> Slicer::double_symbols = {
+    LinkedList<std::wstring> Scanner::Slicer::double_symbols = {
         L"&&", L"||", L"==", L"!=",
         L"<=", L">=", L"++", L"--",
         L"+=", L"-=", L"*=", L"/=",
@@ -13,11 +14,11 @@ namespace mtv {
         L"<<=", L">>="
     };
 
-    void Slicer::init_instance() {
+    void Scanner::Slicer::init_instance() {
         instance.reset(new Slicer());
     }
 
-    Slicer &Slicer::get_instance() {
+    Scanner::Slicer &Scanner::Slicer::get_instance() {
         if (instance == nullptr) {
             instance.reset(new Slicer());
         }
@@ -25,7 +26,7 @@ namespace mtv {
     }
 
 
-    void Slicer::slice() {
+    void Scanner::Slicer::slice() {
         for (auto &buff = Buffer<LinkedList<std::pair<wchar_t,
                  Position> > >::get_instance(); auto &ll: buff) {
             auto it = ll.begin();
@@ -45,7 +46,7 @@ namespace mtv {
         }
     }
 
-    bool Slicer::char_concatenate(LL_Iterator &it, const LL_Iterator &charend) {
+    bool Scanner::Slicer::char_concatenate(LL_Iterator &it, const LL_Iterator &charend) {
         if (wchar_t c = it->first; c >= L'a' && c <= L'z' || c == L'_' || c >= L'A' && c
                                    <= L'Z') {
             std::wstring token;
@@ -65,7 +66,7 @@ namespace mtv {
         return false;
     }
 
-    bool Slicer::is_number(LL_Iterator &it, const LL_Iterator &charend) {
+    bool Scanner::Slicer::is_number(LL_Iterator &it, const LL_Iterator &charend) {
         if (wchar_t c = it->first; c >= L'0' && c <= L'9') {
             std::wstring token;
             const auto pos = it->second;
@@ -82,7 +83,7 @@ namespace mtv {
         return false;
     }
 
-    bool Slicer::is_operator(LL_Iterator &it, const LL_Iterator &charend) {
+    bool Scanner::Slicer::is_operator(LL_Iterator &it, const LL_Iterator &charend) {
         const wchar_t c0 = it->first;
         if (const char c1 = static_cast<char>(c0);
             operators.find(c1) != std::string::npos) {
@@ -101,7 +102,7 @@ namespace mtv {
         return false;
     }
 
-    void Slicer::case_double_symbols(const std::wstring &double_symbol_token,
+    void Scanner::Slicer::case_double_symbols(const std::wstring &double_symbol_token,
                                      std::wstring &token, LL_Iterator &it,
                                      const LL_Iterator &charend) {
         if (it == charend) {
@@ -113,11 +114,11 @@ namespace mtv {
         }
     }
 
-    LinkedList<Token_t> Slicer::get_tokens() const {
+    LinkedList<Token_t> Scanner::Slicer::get_tokens() const {
         return tokens;
     }
 
-    Token_t Slicer::get_next_token() {
+    Token_t Scanner::Slicer::get_next_token() {
         if (tokens.is_empty()) {
             return {L"", TokenType::UNIDENTIFIED, Position()};
         }

@@ -7,13 +7,16 @@ set(DEBUG true)
 
 configure_file(${CMAKE_SOURCE_DIR}/source/config.hpp.in ${CMAKE_BINARY_DIR}/config.hpp)
 
-file(GLOB SOURCES "source/*.cpp" "source/*/*.cpp" "source/*/*/*.cpp")
+file(GLOB SCANNER "source/core/scanner/*.cpp" "source/core/scanner/*/*.cpp")
+file(GLOB ARGS "source/args/*.cpp" "source/args/*/*.cpp")
+file(GLOB UTILS "source/utils/*.cpp" "source/utils/*/*.cpp")
+file(GLOB CORE ${SCANNER})
+file(GLOB SOURCES "source/*.cpp" ${CORE} ${ARGS} ${UTILS})
 file(GLOB TEST "tests/*.cpp" "main_test.cpp")
 file(GLOB MAIN "main.cpp")
 
 add_executable(mtv ${SOURCES} ${MAIN})
-add_executable(mtvt ${SOURCES} ${TEST}
-        tests/cointegrated_test.cpp)
+add_executable(mtvt ${SOURCES} ${TEST})
 
 target_include_directories(mtv PRIVATE ${CMAKE_BINARY_DIR})
 target_include_directories(mtvt PRIVATE ${CMAKE_BINARY_DIR})

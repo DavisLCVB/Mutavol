@@ -11,8 +11,7 @@
 #include <iostream>
 #include <memory>
 
-#include "../../utilities/data_structures/linked_list.hpp"
-#include "../../utilities/factory/list_fact.hpp"
+#include "../../utils/utils.hpp"
 
 // Mutavol namespace
 namespace mtv {

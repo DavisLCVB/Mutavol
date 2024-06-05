@@ -12,18 +12,13 @@
 #include <memory>
 #include <string>
 #include <utility>
+#include "../scanner.hpp"
 
 // Mutavol namespace
 namespace mtv {
     // Using space
     using std::string;
-
-    /**
-    * @class Reader
-    * @brief Class to read the input file
-    * @author Davis Cartagena
-    */
-    class Reader {
+    class Scanner::Reader {
     public:
 
         /**
