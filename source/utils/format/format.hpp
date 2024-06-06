@@ -38,7 +38,7 @@ namespace mtv
             return_s = "KEYWORD";
             break;
         case TokenType::DTYPE:
-            return_ws = L"DTYPE";
+            return_s = "DTYPE";
             break;
         case TokenType::LITERAL:
             return_s = "LITERAL";
@@ -69,6 +69,9 @@ namespace mtv
             break;
         case TokenType::KEYWORD:
             return_ws = L"KEYWORD";
+            break;
+        case TokenType::DTYPE:
+            return_ws = L"DTYPE";
             break;
         case TokenType::LITERAL:
             return_ws = L"LITERAL";

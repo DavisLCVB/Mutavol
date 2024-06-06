@@ -3,6 +3,7 @@
 #define MUTAVOL
 
 #include "args/args.hpp"
+#include "core/parser/parser.hpp"
 #include "core/scanner/scanner.hpp"
 #include "core/buffer/buffer.hpp"
 

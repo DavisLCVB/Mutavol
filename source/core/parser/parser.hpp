@@ -3,14 +3,20 @@
 #define PARSER_HPP
 #include <memory>
 #include "../source/utils/format/format.hpp"
-
 #include "../../utils/data_structures/types.hpp"
+#include "../scanner/scanner.hpp"
 
 namespace mtv
 {
     class Parser
     {
         State afdVars;
+        State afdFuncs;
+        State afdCalls;
+        State adfCond;
+        bool error;
+        Token_t current_token;
+        std::string p_state;
 
     public:
         ~Parser() = default;
@@ -21,13 +27,14 @@ namespace mtv
 
         static Parser &get_instance();
 
-        static void init_instance();
+        static void init_parser();
 
-        static void parse();
+        void parse();
 
     private:
         static std::unique_ptr<Parser> instance;
         Parser();
+        void evaluate_whit_afd(const State &afd);
     };
 } // namespace mtv
 

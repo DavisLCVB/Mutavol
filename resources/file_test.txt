@@ -1,9 +1,3 @@
-entero main(entero h)
-    h = 20
-    /*
-    Comentario de varias lineas
-    */
-    imprimir(h + 1)
-    //Comentario de una linea
-    regresar 0
-fin_main
+entero main(entero a)
+    decimal a = 5
+    escribir a, c
