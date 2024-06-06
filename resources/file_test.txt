@@ -1,4 +1,4 @@
-entero main(entero argc, char argv)
+entero main(entero argcS)
     entero h = 0;
     /*
     Comentario de varias lineas
@@ -6,3 +6,4 @@ entero main(entero argc, char argv)
     imprimir(h); /**/
     //Comentario de una linea
     regresar /*hola*/ 0;
+fin_main

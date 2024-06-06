@@ -8,10 +8,12 @@ namespace mtv {
     const std::wstring Scanner::Classifier::OPERATORS =
             LR"((\+)|(-)|(\*)|(/)|(<)|(>)|(=)|(==)|(!=)|(<=)|(>=)|(&&)|(\|\|))";
     const std::wstring Scanner::Classifier::KEYWORDS =
-            L"(si)|(sino)|(mientras)|(para)|(void)|(caracter)|(cadena)|(entero)|(decimal)|(funcion)$";
+            L"(si)|(sino)|(mientras)|(para)$";
+    const std::wstring Scanner::Classifier::DTYPES =
+            L"(void)|(caracter)|(cadena)|(entero)|(decimal)$";
     const std::wstring Scanner::Classifier::LITERALS = L"(\"(.)*\")|([0-9]+)";
     const std::wstring Scanner::Classifier::DELIMITERS =
-            LR"((\()|(\))|(\[)|(\])|(do)|(fin_.*)|(,)|(\\n))";
+            LR"((\()|(\))|(\[)|(\])|(do)|(fin_.*)|(,)|(;))";
 
     Scanner::Classifier &Scanner::Classifier::get_instance() {
         if (instance == nullptr) {
@@ -34,6 +36,8 @@ namespace mtv {
         auto &slicer = Slicer::get_instance();
         this->tok = slicer.get_next_token();
         if (this->tok.lexem.empty()) return;
+        if(is_datatype())
+            return;
         if (is_keyword())
             return;
         if (is_delimiter())
@@ -63,6 +67,15 @@ namespace mtv {
         if (const std::wregex operator_regex(OPERATORS); std::regex_match(
             this->tok.lexem, operator_regex)) {
             this->tok.type = TokenType::OPERATOR;
+            return true;
+        }
+        return false;
+    }
+
+    bool Scanner::Classifier::is_datatype() {
+        if (const std::wregex dtypes_regex(DTYPES);
+            std::regex_match(this->tok.lexem, dtypes_regex)) {
+            this->tok.type = TokenType::DTYPE;
             return true;
         }
         return false;

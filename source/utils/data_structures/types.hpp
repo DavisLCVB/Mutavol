@@ -5,6 +5,7 @@
 #include <string>
 #include <iostream>
 #include "position.hpp"
+#include <map>
 
 // Mutavol namespace
 namespace mtv {
@@ -13,6 +14,7 @@ namespace mtv {
         OPERATOR,
         DELIMITER,
         KEYWORD,
+        DTYPE,
         LITERAL,
         UNIDENTIFIED
     };
@@ -22,6 +24,9 @@ namespace mtv {
         TokenType type;
         Position pos;
     };
+
+    typedef std::map<std::wstring, std::wstring> Transition;
+    typedef std::map<std::wstring, Transition> State;
 
     inline std::wstring type_str(const TokenType &type) {
         const auto green = L"\x1b[1;32m";
@@ -39,6 +44,9 @@ namespace mtv {
                 break;
             case TokenType::KEYWORD:
                 return_ws = L"KEYWORD";
+                break;
+            case TokenType::DTYPE:
+                return_ws = L"DTYPE";
                 break;
             case TokenType::LITERAL:
                 return_ws = L"LITERAL";
