@@ -32,6 +32,13 @@ namespace mtv {
             auto it = ll.begin();
             auto charend = ll.end();
             while (it != charend) {
+                if(it->first == L'\n') {
+                    std::wstring token;
+                    token.push_back(it->first);
+                    tokens.push({token, TokenType::UNIDENTIFIED, it->second});
+                    ++it;
+                    continue;
+                }
                 while ((it->first == L' ' || it->first == L'\t') && it != charend) {
                     ++it;
                 }

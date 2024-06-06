@@ -1,4 +1,5 @@
 #include "../source/mutavol"
+#include "../source/utils/format/format.hpp"
 #include <iostream>
 
 
@@ -8,9 +9,9 @@ int coin_test(const int argc, char *argv[]) {
     if (result.should_exit) return 0;
     mtv::Scanner::init_scanner(result.input);
     while(true) {
-        const auto [lexem, type, pos] = mtv::Scanner::get();
-        if(lexem.empty())break;
-        std::wcout << lexem << L'\n';
+        const auto token = mtv::Scanner::get();
+        if(token.lexem.empty())break;
+        std::wcout << token <<L'\n';
     }
     return 0;
 }
