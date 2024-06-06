@@ -2,6 +2,7 @@
 #ifndef PASER_HPP
 #define PARSER_HPP
 #include <memory>
+#include "../source/utils/format/format.hpp"
 
 #include "../../utils/data_structures/types.hpp"
 

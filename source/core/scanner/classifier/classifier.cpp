@@ -13,7 +13,7 @@ namespace mtv {
             L"(void)|(caracter)|(cadena)|(entero)|(decimal)$";
     const std::wstring Scanner::Classifier::LITERALS = L"(\"(.)*\")|([0-9]+)";
     const std::wstring Scanner::Classifier::DELIMITERS =
-            LR"((\()|(\))|(\[)|(\])|(do)|(fin_.*)|(,)|(;))";
+            LR"((\()|(\))|(\[)|(\])|(do)|(fin_.*)|(,)|(\n))";
 
     Scanner::Classifier &Scanner::Classifier::get_instance() {
         if (instance == nullptr) {
