@@ -7,5 +7,6 @@
 #include "scanner/classifier/classifier.hpp"
 #include "scanner/slicer/slicer.hpp"
 #include "scanner/scanner.hpp"
+#include "parser/parser.hpp"
 
 #endif //CORE_HPP

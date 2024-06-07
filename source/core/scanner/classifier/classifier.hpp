@@ -27,9 +27,11 @@ namespace mtv {
 
     private:
         static const std::wstring IDENTIFIERS;
-        static const std::wstring OPERATORS;
+        static const std::wstring OPERATORSCOMP;
+        static const std::wstring OPERATORSEXP;
         static const std::wstring DELIMITERS;
         static const std::wstring KEYWORDS;
+        static const std::wstring DTYPES;
         static const std::wstring LITERALS;
         static std::unique_ptr<Classifier> instance;
         Token_t tok;
@@ -40,7 +42,11 @@ namespace mtv {
 
         bool is_identifier();
 
-        bool is_operator();
+        bool is_operator_comp();
+
+        bool is_operator_exp();
+
+        bool is_datatype();
 
         bool is_keyword();
 

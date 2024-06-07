@@ -6,91 +6,112 @@
 #include <iostream>
 #include <string>
 
-namespace mtv {
-    inline std::ostream &operator<<(std::ostream &os, const Position &pos) {
+namespace mtv
+{
+    inline std::ostream &operator<<(std::ostream &os, const Position &pos)
+    {
         os << pos.row << ";" << pos.column;
         return os;
     }
 
-    inline std::wostream &operator<<(std::wostream &os, const Position &pos) {
+    inline std::wostream &operator<<(std::wostream &os, const Position &pos)
+    {
         os << pos.row << ";" << pos.column;
         return os;
     }
 
-    inline std::string type_str(const TokenType &type) {
+    inline std::string type_str(const TokenType &type)
+    {
         std::string return_s;
-        switch (type) {
-            case TokenType::IDENTIFIER:
-                return_s = "IDENTIFIER";
-                break;
-            case TokenType::OPERATOR:
-                return_s = "OPERATOR";
-                break;
-            case TokenType::DELIMITER:
-                return_s = "DELIMITER";
-                break;
-            case TokenType::KEYWORD:
-                return_s = "KEYWORD";
-                break;
-            case TokenType::LITERAL:
-                return_s = "LITERAL";
-                break;
-            case TokenType::UNIDENTIFIED:
-                return_s = "UNIDENTIFIED";
-                break;
-            default:
-                return_s = "UNKNOWN";
-                break;
+        switch (type)
+        {
+        case TokenType::IDENTIFIER:
+            return_s = "IDENTIFIER";
+            break;
+        case TokenType::OPERATORCOMP:
+            return_s = "OPERATORCOMP";
+            break;
+        case TokenType::OPERATOREXP:
+            return_s = "OPERATOREXP";
+            break;
+        case TokenType::DELIMITER:
+            return_s = "DELIMITER";
+            break;
+        case TokenType::KEYWORD:
+            return_s = "KEYWORD";
+            break;
+        case TokenType::DTYPE:
+            return_s = "DTYPE";
+            break;
+        case TokenType::LITERAL:
+            return_s = "LITERAL";
+            break;
+        case TokenType::UNIDENTIFIED:
+            return_s = "UNIDENTIFIED";
+            break;
+        default:
+            return_s = "UNKNOWN";
+            break;
         }
         return return_s;
     }
 
-    inline std::wstring type_wstr(const TokenType &type) {
+    inline std::wstring type_wstr(const TokenType &type)
+    {
         std::wstring return_ws;
-        switch (type) {
-            case TokenType::IDENTIFIER:
-                return_ws = L"IDENTIFIER";
-                break;
-            case TokenType::OPERATOR:
-                return_ws = L"OPERATOR";
-                break;
-            case TokenType::DELIMITER:
-                return_ws = L"DELIMITER";
-                break;
-            case TokenType::KEYWORD:
-                return_ws = L"KEYWORD";
-                break;
-            case TokenType::LITERAL:
-                return_ws = L"LITERAL";
-                break;
-            case TokenType::UNIDENTIFIED:
-                return_ws = L"UNIDENTIFIED";
-                break;
-            default:
-                return_ws = L"UNKNOWN";
-                break;
+        switch (type)
+        {
+        case TokenType::IDENTIFIER:
+            return_ws = L"IDENTIFIER";
+            break;
+        case TokenType::OPERATOREXP:
+            return_ws = L"OPERATOREXP";
+            break;
+        case TokenType::OPERATORCOMP:
+            return_ws = L"OPERATORCOMP";
+            break;
+        case TokenType::DELIMITER:
+            return_ws = L"DELIMITER";
+            break;
+        case TokenType::KEYWORD:
+            return_ws = L"KEYWORD";
+            break;
+        case TokenType::DTYPE:
+            return_ws = L"DTYPE";
+            break;
+        case TokenType::LITERAL:
+            return_ws = L"LITERAL";
+            break;
+        case TokenType::UNIDENTIFIED:
+            return_ws = L"UNIDENTIFIED";
+            break;
+        default:
+            return_ws = L"UNKNOWN";
+            break;
         }
         return return_ws;
     }
 
-    inline std::ostream &operator<<(std::ostream &os, const TokenType &type) {
+    inline std::ostream &operator<<(std::ostream &os, const TokenType &type)
+    {
         const auto return_s = type_str(type);
         os << return_s;
         return os;
     }
 
-    inline std::wostream &operator<<(std::wostream &os, const TokenType &type) {
+    inline std::wostream &operator<<(std::wostream &os, const TokenType &type)
+    {
         const auto return_ws = type_wstr(type);
         os << return_ws;
         return os;
     }
 
-    inline std::wostream &operator<<(std::wostream &os, const Token_t &token) {
+    inline std::wostream &operator<<(std::wostream &os, const Token_t &token)
+    {
         os << (token.lexem == L"\n" ? L"\\n" : token.lexem) << "\t[" << token.type << "]"
-                << "(" <<
-                token.pos << ")";
+           << "(" << token.pos << ")";
         return os;
     }
-} //namespace mtv
+} // namespace mtv
 
-#endif //FORMAT_HPP
+#endif // FORMAT_HPP
