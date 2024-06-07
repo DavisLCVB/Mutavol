@@ -5,7 +5,7 @@ información en el proyecto. La lista enlazada es una estructura de datos que co
 en [nodos](#node-mtvnodet) que contienen un valor y un puntero al siguiente nodo.
 
 <div style="text-align: center;">
-<img src="../docs_resources/linkedlist.png" alt="LinkedList">
+<img src="../resources/linkedlist.png" alt="LinkedList">
 </div>
 
 ## Tarea Principal

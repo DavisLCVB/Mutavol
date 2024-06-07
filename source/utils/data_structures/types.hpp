@@ -26,8 +26,8 @@ namespace mtv {
         Position pos;
     };
 
-    typedef std::map<std::wstring, std::wstring> Transition;
-    typedef std::map<std::wstring, Transition> State;
+    using Transition = std::map<std::wstring, std::wstring>;
+    using State = std::map<std::wstring, Transition>;
 } // namespace mtv
 
 #endif // STRUCTS_HPP

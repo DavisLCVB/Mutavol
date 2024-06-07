@@ -2,7 +2,6 @@
 #define FORMAT_HPP
 
 #include "../utils.hpp"
-#include "../../core/buffer/buffer.hpp"
 #include <iostream>
 #include <string>
 

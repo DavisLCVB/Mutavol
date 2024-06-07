@@ -104,6 +104,10 @@ namespace mtv {
             return buffer->get(index);
         }
 
+        void clear() {
+            this->buffer->clear();
+        }
+
         // Delete copy constructor
         Buffer(const Buffer &) = delete;
 

@@ -9,5 +9,5 @@ Consta de 2 atributos:
 Ambos de tipo `size_t` (`unsigned long long int`).
 
 <div style="text-align: center;">
-<img src="../docs_resources/position.png" alt="Position">
+<img src="../resources/position.png" alt="Position">
 </div>
