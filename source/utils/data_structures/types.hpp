@@ -13,6 +13,7 @@ namespace mtv {
         IDENTIFIER,
         OPERATORCOMP,
         OPERATOREXP,
+        OPERATORDOBLE,
         DELIMITER,
         KEYWORD,
         DTYPE,

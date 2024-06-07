@@ -10,6 +10,8 @@ namespace mtv
         LR"((<)|(>)|(==)|(!=)|(<=)|(>=)|(&&)|(\|\|))";
     const std::wstring Scanner::Classifier::OPERATORSEXP =
         LR"((\+)|(-)|(\*)|(/)|(=)|(\^))";
+    const std::wstring Scanner::Classifier::OPERATORSDOBLE =
+        LR"((\+=)|(\+\+)|(--)|(-=)|(\*=)|(/=)|(=)|(\^=))";
     const std::wstring Scanner::Classifier::KEYWORDS =
         L"(if)|(else)|(while)|(for)$";
     const std::wstring Scanner::Classifier::DTYPES =
@@ -62,6 +64,8 @@ namespace mtv
             return;
         if (is_operator_exp())
             return;
+        if (is_operator_dob())
+            return;
         is_literal();
     }
 
@@ -99,6 +103,17 @@ namespace mtv
                 this->tok.lexem, opexp_regex))
         {
             this->tok.type = TokenType::OPERATOREXP;
+            return true;
+        }
+        return false;
+    }
+
+    bool Scanner::Classifier::is_operator_dob()
+    {
+        if (const std::wregex opdob_regex(OPERATORSDOBLE); std::regex_match(
+                this->tok.lexem, opdob_regex))
+        {
+            this->tok.type = TokenType::OPERATORDOBLE;
             return true;
         }
         return false;
