@@ -1,5 +1,5 @@
 int main(int a){
-    a = 5 + b;
-    print(a);
-    return 0;
+    int a=2;
+    function(a, b, c);
+    for( int i=0 ; i<5 ; i++ )
 }

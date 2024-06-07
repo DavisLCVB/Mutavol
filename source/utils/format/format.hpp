@@ -33,6 +33,9 @@ namespace mtv
         case TokenType::OPERATOREXP:
             return_s = "OPERATOREXP";
             break;
+        case TokenType::OPERATORDOBLE:
+            return_s = "OPERATORDOBLE";
+            break;
         case TokenType::DELIMITER:
             return_s = "DELIMITER";
             break;
@@ -68,6 +71,9 @@ namespace mtv
             break;
         case TokenType::OPERATORCOMP:
             return_ws = L"OPERATORCOMP";
+            break;
+        case TokenType::OPERATORDOBLE:
+            return_ws = L"OPERATORDOBLE";
             break;
         case TokenType::DELIMITER:
             return_ws = L"DELIMITER";
