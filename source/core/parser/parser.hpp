@@ -13,7 +13,6 @@ namespace mtv
         State afdVars;
         State afdFuncs;
         State afdCalls;
-        State adfCond;
         bool error;
         Token_t current_token;
         std::string p_state;

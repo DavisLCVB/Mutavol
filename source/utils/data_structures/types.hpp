@@ -11,7 +11,8 @@
 namespace mtv {
     enum class TokenType {
         IDENTIFIER,
-        OPERATOR,
+        OPERATORCOMP,
+        OPERATOREXP,
         DELIMITER,
         KEYWORD,
         DTYPE,

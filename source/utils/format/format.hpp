@@ -28,8 +28,11 @@ namespace mtv
         case TokenType::IDENTIFIER:
             return_s = "IDENTIFIER";
             break;
-        case TokenType::OPERATOR:
-            return_s = "OPERATOR";
+        case TokenType::OPERATORCOMP:
+            return_s = "OPERATORCOMP";
+            break;
+        case TokenType::OPERATOREXP:
+            return_s = "OPERATOREXP";
             break;
         case TokenType::DELIMITER:
             return_s = "DELIMITER";
@@ -61,8 +64,11 @@ namespace mtv
         case TokenType::IDENTIFIER:
             return_ws = L"IDENTIFIER";
             break;
-        case TokenType::OPERATOR:
-            return_ws = L"OPERATOR";
+        case TokenType::OPERATOREXP:
+            return_ws = L"OPERATOREXP";
+            break;
+        case TokenType::OPERATORCOMP:
+            return_ws = L"OPERATORCOMP";
             break;
         case TokenType::DELIMITER:
             return_ws = L"DELIMITER";

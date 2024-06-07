@@ -6,15 +6,17 @@ namespace mtv
 {
     std::unique_ptr<Scanner::Classifier> Scanner::Classifier::instance = nullptr;
     const std::wstring Scanner::Classifier::IDENTIFIERS = L"(_|[a-zA-Z])(_|[a-zA-Z0-9])*";
-    const std::wstring Scanner::Classifier::OPERATORS =
-        LR"((\+)|(-)|(\*)|(/)|(<)|(>)|(=)|(==)|(!=)|(<=)|(>=)|(&&)|(\|\|))";
+    const std::wstring Scanner::Classifier::OPERATORSCOMP =
+        LR"((<)|(>)|(==)|(!=)|(<=)|(>=)|(&&)|(\|\|))";
+    const std::wstring Scanner::Classifier::OPERATORSEXP =
+        LR"((\+)|(-)|(\*)|(/)|(=)|(\^))";
     const std::wstring Scanner::Classifier::KEYWORDS =
-        L"(si)|(sino)|(mientras)|(para)$";
+        L"(if)|(else)|(while)|(for)$";
     const std::wstring Scanner::Classifier::DTYPES =
-        L"(void)|(caracter)|(cadena)|(entero)|(decimal)$";
+        L"(void)|(char)|(string)|(int)|(float)|(bool)$";
     const std::wstring Scanner::Classifier::LITERALS = L"(\"(.)*\")|([0-9]+)";
     const std::wstring Scanner::Classifier::DELIMITERS =
-        LR"((\()|(\))|(\[)|(\])|(do)|(fin_.*)|(,)|(\n))";
+        LR"((\()|(\))|(\[)|(\])|(\{)|(\})|(,)|(;))";
 
     Scanner::Classifier &Scanner::Classifier::get_instance()
     {
@@ -38,11 +40,11 @@ namespace mtv
 
     void Scanner::Classifier::classify()
     {
-        // Llamado artificial a slicer
         auto &slicer = Slicer::get_instance();
         this->tok = slicer.get_next_token();
         if (this->tok.lexem.empty())
         {
+            //FINAL DEL ARCHIVO
             this->tok.type = TokenType::DELIMITER;
             this->tok.lexem = L"$";
             return;
@@ -56,7 +58,9 @@ namespace mtv
             return;
         if (is_identifier())
             return;
-        if (is_operator())
+        if (is_operator_comp())
+            return;
+        if (is_operator_exp())
             return;
         is_literal();
     }
@@ -78,12 +82,23 @@ namespace mtv
         return false;
     }
 
-    bool Scanner::Classifier::is_operator()
+    bool Scanner::Classifier::is_operator_comp()
     {
-        if (const std::wregex operator_regex(OPERATORS); std::regex_match(
-                this->tok.lexem, operator_regex))
+        if (const std::wregex opcomp_regex(OPERATORSCOMP); std::regex_match(
+                this->tok.lexem, opcomp_regex))
         {
-            this->tok.type = TokenType::OPERATOR;
+            this->tok.type = TokenType::OPERATORCOMP;
+            return true;
+        }
+        return false;
+    }
+
+    bool Scanner::Classifier::is_operator_exp()
+    {
+        if (const std::wregex opexp_regex(OPERATORSEXP); std::regex_match(
+                this->tok.lexem, opexp_regex))
+        {
+            this->tok.type = TokenType::OPERATOREXP;
             return true;
         }
         return false;

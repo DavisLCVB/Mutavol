@@ -5,7 +5,7 @@
 void separator();
 
 int main(const int argc, char *argv[]) {
-    test_parser(argc, argv);
+    coin_test(argc, argv);
     return 0;
 }
 

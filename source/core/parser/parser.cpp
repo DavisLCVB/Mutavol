@@ -143,7 +143,7 @@ namespace mtv
                     this->current_token = mtv::Scanner::get();
                     if(this->current_token.type == TokenType::IDENTIFIER){
                         evaluate_whit_afd(this->afdCalls);
-                    }else if(this->current_token.type == TokenType::OPERATOR){
+                    }else if(this->current_token.lexem == L"="){
                         // Se analiza la expresion matematica
                         break;
                     }
