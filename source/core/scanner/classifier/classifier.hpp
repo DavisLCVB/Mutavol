@@ -29,6 +29,7 @@ namespace mtv {
         static const std::wstring IDENTIFIERS;
         static const std::wstring OPERATORSCOMP;
         static const std::wstring OPERATORSEXP;
+        static const std::wstring OPERATORSDOBLE;
         static const std::wstring DELIMITERS;
         static const std::wstring KEYWORDS;
         static const std::wstring DTYPES;
@@ -45,6 +46,8 @@ namespace mtv {
         bool is_operator_comp();
 
         bool is_operator_exp();
+
+        bool is_operator_dob();
 
         bool is_datatype();
 
