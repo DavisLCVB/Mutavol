@@ -9,7 +9,7 @@ que se maneje.
 Almacenar datos en una instancia segura e independiente tanto del tipo de dato que se
 maneje como del contexto en el que se necesite.
 <div style="text-align: center;">
-<img src="../docs_resources/buffer.png" alt="Buffer">
+<img src="../resources/buffer.png" alt="Buffer">
 </div>
 
 ## Características

@@ -27,8 +27,8 @@ namespace mtv {
         Position pos;
     };
 
-    typedef std::map<std::wstring, std::wstring> Transition;
-    typedef std::map<std::wstring, Transition> State;
+    using Transition = std::map<std::wstring, std::wstring>;
+    using State = std::map<std::wstring, Transition>;
     
     struct ResultAPD {
         std::string nextState;
@@ -36,10 +36,10 @@ namespace mtv {
         std::wstring actionP2;
     };
 
-    typedef std::map<std::wstring, ResultAPD> P2Result;
-    typedef std::map<std::wstring, P2Result> P1Result;
-    typedef std::map<std::wstring, P1Result> Simbol;
-    typedef std::map<std::string, Simbol> APDState;
+    using P2Result = std::map<std::wstring, ResultAPD>;
+    using P1Result = std::map<std::wstring, P2Result>;
+    using Simbol = std::map<std::wstring, P1Result>;
+    using APDState = std::map<std::string, Simbol>;
 } // namespace mtv
 
 #endif // STRUCTS_HPP
