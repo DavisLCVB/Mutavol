@@ -69,6 +69,11 @@ namespace mtv
         this->apd["q0"][L"{"][L"P0"][L"P0"] = ResultAPD{"q1", L"{", L"-"};
         this->apd["q1"][L"{"][L"{"][L"P0"] = ResultAPD{"q1", L"-", L"{"};
         this->apd["q1"][L"{"][L"{"][L"{"] = ResultAPD{"q1", L"-", L"{"};
+        this->apd["q1"][L"{"][L"{"][L"if"] = ResultAPD{"q1", L"-", L"{"};
+        this->apd["q1"][L"if"][L"{"][L"P0"] = ResultAPD{"q1", L"-", L"if"};
+        this->apd["q1"][L"if"][L"{"][L"{"] = ResultAPD{"q1", L"-", L"if"};
+        this->apd["q1"][L"if"][L"{"][L"if"] = ResultAPD{"q1", L"-", L"if"};
+        this->apd["q1"][L"else"][L"{"][L"if"] = ResultAPD{"q1", L"-", L"d"};
         this->apd["q1"][L"}"][L"{"][L"{"] = ResultAPD{"q1", L"-", L"d"};
         this->apd["q1"][L"}"][L"{"][L"P0"] = ResultAPD{"q0", L"d", L"-"};
         this->apd["q0"][L"$"][L"P0"][L"P0"] = ResultAPD{"qf", L"-", L"-"};
@@ -238,7 +243,7 @@ namespace mtv
 
     void Parser::evaluate_apd()
     {
- #if DEBUG
+#if DEBUG
         std::wcout << L"---------Antes de Actualizar: " << L"\n";
         std::wcout << L"Token: " << this->current_token.lexem << L"\n";
         std::cout << "Estado de pila: " << this->p_state << "\n";
@@ -325,13 +330,13 @@ namespace mtv
                     this->current_token = mtv::Scanner::get();
                     evaluate_apd();
                 }
-                else if(this->current_token.lexem == L"$"){
+                else if (this->current_token.lexem == L"$")
+                {
                     evaluate_apd();
                     break;
                 }
-                else 
+                else
                     this->error = true;
-                
             }
             else if (this->p_state == "q1")
             {
@@ -343,9 +348,36 @@ namespace mtv
                 {
                     if (this->current_token.lexem == L"for")
                         evaluate_whit_afd(this->afdFor);
-                    else if (this->current_token.lexem == L"if" || this->current_token.lexem == L"while")
+                    else if (this->current_token.lexem == L"if")
+                    {
+                        evaluate_apd();
                         if (!evaluate_conditional())
                             this->error = true;
+                    }
+                    else if (this->current_token.lexem == L"while")
+                    {
+                        if (!evaluate_conditional())
+                            this->error = true;
+                    }
+                    else if (this->current_token.lexem == L"else")
+                    {
+                        evaluate_apd();
+                        if(this->error == true) break;
+                        
+                        this->current_token = mtv::Scanner::get();
+                        if (this->current_token.lexem == L"if")
+                            continue;
+                        else if (this->current_token.lexem == L"{")
+                        {
+                            evaluate_apd();
+                            this->current_token = mtv::Scanner::get();
+                            continue;
+                        }
+                        else
+                        {
+                            this->error = true;
+                        }
+                    }
                     this->current_token = mtv::Scanner::get();
                     evaluate_apd();
                 }
@@ -374,7 +406,8 @@ namespace mtv
                 }
             }
 
-            this->current_token = mtv::Scanner::get();                   
+            if(this->error == false && this->p_state != "qf")
+                this->current_token = mtv::Scanner::get();
         }
 
         if (this->error == false && this->p_state == "qf")
