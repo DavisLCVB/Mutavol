@@ -1,8 +1,12 @@
 #include "parser.hpp"
+#include <locale>
+#include <codecvt>
 
 namespace mtv
 {
     std::unique_ptr<Parser> Parser::instance = nullptr;
+
+    std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
 
     Parser::Parser()
     {
@@ -119,6 +123,92 @@ namespace mtv
         }
     }
 
+    bool Parser::evaluate_conditional()
+    {
+        try {
+            this->current_token = mtv::Scanner::get();
+            X();
+            return true;
+        } catch (const std::runtime_error &e) {
+            std::wcout << e.what() << L"\n";
+            return false;
+        }
+    }
+
+    void Parser::X()
+    {
+        if (current_token.lexem == L"(") {
+
+            this->current_token = mtv::Scanner::get();
+            S();
+            if (current_token.lexem != L")") throw std::runtime_error("Error");
+
+            this->current_token = mtv::Scanner::get();
+
+            if (current_token.lexem != L"{") throw std::runtime_error("Token esperado: '{'");
+        } else {
+            throw std::runtime_error("token esperado al inicio de la condicional: '('");
+        }
+    }
+
+    void Parser::S()
+    {
+        if (current_token.lexem == L"(") {
+
+            this->current_token = mtv::Scanner::get();
+            S();
+            if (current_token.lexem != L")") throw std::runtime_error("token esperado1: ')'");
+
+            this->current_token = mtv::Scanner::get();
+            Y();
+        } else {
+            H();
+            Y();
+        }
+    }
+
+    void Parser::H()
+    {
+        if (current_token.type == TokenType::IDENTIFIER || current_token.type == TokenType::LITERAL) {
+            this->current_token = mtv::Scanner::get();
+
+            if (current_token.type != TokenType::OPERATORCOMP)
+                throw std::runtime_error("Token de comparación esperado");
+
+            this->current_token = mtv::Scanner::get();
+
+            if (current_token.type != TokenType::IDENTIFIER && current_token.type != TokenType::LITERAL)
+                throw std::runtime_error("Identificador o literal esperado");
+
+            this->current_token = mtv::Scanner::get();
+
+        } else if (current_token.lexem == L"(") {
+
+            this->current_token = mtv::Scanner::get();
+            S();
+            if (current_token.lexem != L")") throw std::runtime_error("Token esperado2: ')'");
+
+            this->current_token = mtv::Scanner::get();
+
+        } else {
+            std::string lexem_str = converter.to_bytes(current_token.lexem);
+            throw std::runtime_error("Token inesperado:" + lexem_str);
+        }
+    }
+
+    void Parser::Y()
+    {
+        if (current_token.lexem == L"&&" || current_token.lexem == L"||") {
+            this->current_token = mtv::Scanner::get();
+            S();
+            Y();
+        } else if (current_token.type == TokenType::OPERATORCOMP) {
+            this->current_token = mtv::Scanner::get();
+            H();
+            Y();
+        }
+    }
+
     void Parser::parse()
     {
         this->current_token = mtv::Scanner::get();
@@ -148,11 +238,13 @@ namespace mtv
                     if (this->current_token.lexem == L"for")
                         evaluate_whit_afd(this->afdFor);
                     else if (this->current_token.lexem == L"if" || this->current_token.lexem == L"while")
-                        // Se analiza la expresion logica
-                        break;
-                }
-                else if (this->current_token.type == TokenType::IDENTIFIER)
-                {
+                        if(evaluate_conditional()){
+
+                        }else{
+                            this->error = true;
+                        }
+                    break;
+                } else if (this->current_token.type == TokenType::IDENTIFIER) {
                     this->current_token = mtv::Scanner::get();
                     if (this->current_token.lexem == L"(")
                     {

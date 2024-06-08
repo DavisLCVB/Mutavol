@@ -17,6 +17,10 @@ namespace mtv
         bool error;
         Token_t current_token;
         std::string p_state;
+        void X();
+        void S();
+        void H();
+        void Y();
 
     public:
         ~Parser() = default;
@@ -35,6 +39,7 @@ namespace mtv
         static std::unique_ptr<Parser> instance;
         Parser();
         void evaluate_whit_afd(const State &afd);
+        bool evaluate_conditional();
     };
 } // namespace mtv
 
