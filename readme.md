@@ -75,7 +75,7 @@ el archivo.
   y comentarios de bloque (`/* */`), además de suprimir líneas vacías.
 
 <div style="text-align: center;">
-<img src="docs_resources/file_to_buff.png" alt="Conversión de archivo a Buffer">
+<img src="resources/file_to_buff.png" alt="Conversión de archivo a Buffer">
 </div>
 
 #### Características del código:

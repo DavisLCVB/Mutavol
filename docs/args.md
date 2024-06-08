@@ -29,5 +29,5 @@ de que los argumentos sean procesados, pero las funciones de ayuda o versión se
 ejecutadas, el programa también debe detenerse (``should_exit``).
 
 <div style="text-align: center">
-<img src="../docs_resources/args_result.png" alt="ArgsResult">
+<img src="../resources/args_result.png" alt="ArgsResult">
 </div>
