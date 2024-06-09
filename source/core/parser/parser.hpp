@@ -34,6 +34,16 @@ namespace mtv
         void Z();
         void W();
         void V();
+        bool ifflag;
+
+        //Parser LL(1) para estructuras de bloques de funciones
+        void F();
+        void I();
+        void A();
+        void B();
+        void C();
+        void T();
+
 
     public:
         ~Parser() = default;
@@ -53,7 +63,7 @@ namespace mtv
 
         Parser();
 
-        void parse_content();
+        void get_next_token();
 
         void evaluate_whit_afd(const State &afd);
 
