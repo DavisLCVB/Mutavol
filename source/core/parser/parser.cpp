@@ -238,7 +238,7 @@ namespace mtv
 
     void Parser::evaluate_apd()
     {
- #if DEBUG
+#if DEBUG
         std::wcout << L"---------Antes de Actualizar: " << L"\n";
         std::wcout << L"Token: " << this->current_token.lexem << L"\n";
         std::cout << "Estado de pila: " << this->p_state << "\n";
@@ -325,56 +325,21 @@ namespace mtv
                     this->current_token = mtv::Scanner::get();
                     evaluate_apd();
                 }
-                else if(this->current_token.lexem == L"$"){
+                else if (this->current_token.lexem == L"$")
+                {
                     evaluate_apd();
                     break;
                 }
-                else 
+                else
                     this->error = true;
-                
             }
             else if (this->p_state == "q1")
             {
-                // Es declaracion de variables
-                if (this->current_token.type == TokenType::DTYPE)
-                    evaluate_whit_afd(this->afdVars);
-                // Es declaracion de bloques (for, if, while)
-                else if (this->current_token.type == TokenType::KEYWORD)
-                {
-                    if (this->current_token.lexem == L"for")
-                        evaluate_whit_afd(this->afdFor);
-                    else if (this->current_token.lexem == L"if" || this->current_token.lexem == L"while")
-                        if (!evaluate_conditional())
-                            this->error = true;
-                    this->current_token = mtv::Scanner::get();
-                    evaluate_apd();
-                }
-                // Es una llamada a funcion o una expresion matematica
-                else if (this->current_token.type == TokenType::IDENTIFIER)
-                {
-                    this->current_token = mtv::Scanner::get();
-                    if (this->current_token.lexem == L"(")
-                    {
-                        evaluate_whit_afd(this->afdCalls);
-                    }
-                    else if (this->current_token.type == TokenType::OPERATORDOBLE || this->current_token.lexem == L"=")
-                    {
-                        // Se analiza la expresion matematica
-                        break;
-                    }
-                }
-                // Es cerrado de bloque de instrucciones
-                else if (this->current_token.lexem == L"}")
-                {
-                    evaluate_apd();
-                }
-                else
-                {
-                    this->error = true;
-                }
+                parse_content();
             }
 
-            this->current_token = mtv::Scanner::get();                   
+            if(this->error == false && this->p_state != "qf")
+                this->current_token = mtv::Scanner::get();
         }
 
         if (this->error == false && this->p_state == "qf")
@@ -384,6 +349,119 @@ namespace mtv
             std::wcout << L"Error en la linea: " << this->current_token.pos.row << L" columna: " << this->current_token.pos.column << L"\n";
             std::wcout << L"Error en la lexema: " << this->current_token.lexem << L" type:" << type_wstr(this->current_token.type) << L"\n";
             std::cout << "Error en el estado de pila: " << this->p_state << "\n";
+        }
+    }
+
+    void Parser::parse_content()
+    {
+        // Es declaracion de variables
+        if (this->current_token.type == TokenType::DTYPE)
+            evaluate_whit_afd(this->afdVars);
+        // Es declaracion de bloques (for, if, while)
+        else if (this->current_token.type == TokenType::KEYWORD)
+        {
+            if (this->current_token.lexem == L"for")
+                evaluate_whit_afd(this->afdFor);
+            else if (this->current_token.lexem == L"if")
+            {
+                if (!eval_struct_condition())
+                    this->error = true;
+                return;
+            }
+            else if (this->current_token.lexem == L"while")
+            {
+                if (!evaluate_conditional())
+                    this->error = true;
+            }
+            this->current_token = mtv::Scanner::get();
+            evaluate_apd();
+        }
+        // Es una llamada a funcion o una expresion matematica
+        else if (this->current_token.type == TokenType::IDENTIFIER)
+        {
+            this->current_token = mtv::Scanner::get();
+            if (this->current_token.lexem == L"(")
+            {
+                evaluate_whit_afd(this->afdCalls);
+            }
+            else if (this->current_token.type == TokenType::OPERATORDOBLE || this->current_token.lexem == L"=")
+            {
+                // Se analiza la expresion matematica
+                break;
+            }
+        }
+        // Es cerrado de bloque de instrucciones
+        else if (this->current_token.lexem == L"}")
+        {
+            evaluate_apd();
+        }
+        else
+        {
+            this->error = true;
+        }
+    }
+
+    bool Parser::eval_struct_condition()
+    {
+        try
+        {
+            Z();
+            return true;
+        }
+        catch (const std::runtime_error &e)
+        {
+            std::wcout << e.what() << L"\n";
+            return false;
+        }
+    }
+
+    void Parser::Z()
+    {
+        if (this->current_token.lexem == L"if")
+        {
+            if (!evaluate_conditional())
+                throw std::runtime_error("Error en la condicional");
+
+            this->current_token = mtv::Scanner::get();
+            if (this->current_token.lexem == L"{")
+            {
+                this->current_token = mtv::Scanner::get();
+                parse_content();
+                if(this->error == true)
+                    throw std::runtime_error("Error en el contenido del bloque");
+                this->current_token = mtv::Scanner::get();
+                if(this->current_token.lexem == L"}"){
+                    W();
+                }
+            }
+        } else {
+            throw std::runtime_error("Token esperado: 'if'");
+        }
+    }
+
+    void Parser::W(){
+        if(this->current_token.lexem == L"if"){
+            //lambda
+        } else if(this->current_token.lexem == L"else"){
+            this->current_token = mtv::Scanner::get();
+            V();
+        } else {
+            throw std::runtime_error("Token esperado: 'if'");
+        }
+    }
+
+    void V(){
+        if(this->current_token.lexem == L"{"){
+            this->current_token = mtv::Scanner::get();
+            parse_content();
+            if(this->error == true)
+                throw std::runtime_error("Error en el contenido del bloque");
+            this->current_token = mtv::Scanner::get();
+            if(this->current_token.lexem == L"}"){
+                //lambda
+            }
+        } else {
+            throw std::runtime_error("Token esperado: '{'");
         }
     }
 
