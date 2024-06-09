@@ -1,7 +1,7 @@
 int main(int a){
     int a=2;
 
-    if ( (a<2) debeError && variable>10 || (b>10)) {
+    if ( (a<2) && variable>10 || (b>10)) {
 
     }
 
@@ -9,5 +9,11 @@ int main(int a){
 
     }
     function(a, b, c);
-    for( int i=0 ; i<5 ; i++ )
+    for( int i=0 ; i<5 ; i++ ){
+
+    }
+}
+
+void arroba(){
+    
 }
