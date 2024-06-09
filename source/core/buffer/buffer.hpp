@@ -142,6 +142,11 @@ namespace mtv {
             return buffer->end();
         }
 
+        ~Buffer() {
+            this->buffer->clear();
+            delete buffer;
+        }
+
     private:
         // Pointer to the unique instance of the class
         static std::unique_ptr<Buffer> instance;

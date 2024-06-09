@@ -1,5 +1,5 @@
 #pragma once
-#ifndef PASER_HPP
+#ifndef PARSER_HPP
 #define PARSER_HPP
 #include <memory>
 #include "../source/utils/format/format.hpp"
@@ -7,15 +7,13 @@
 #include "../scanner/scanner.hpp"
 #include <stack>
 
-namespace mtv
-{
-    class Parser
-    {
+namespace mtv {
+    class Parser {
         State afdVars;
         State afdFuncs;
         State afdCalls;
         State afdFor;
-        
+
         APDState apd;
         std::stack<std::wstring> stack_func;
         std::stack<std::wstring> stack_bloq;
@@ -23,9 +21,13 @@ namespace mtv
         bool error;
         Token_t current_token;
         std::string p_state;
+
         void X();
+
         void S();
+
         void H();
+
         void Y();
 
     public:
@@ -47,12 +49,12 @@ namespace mtv
         Parser();
 
         void evaluate_whit_afd(const State &afd);
-        
+
         bool evaluate_conditional();
 
         void evaluate_apd();
 
-        std::wstring evaluate_pila(std::stack<std::wstring> &pila);
+        static std::wstring evaluate_pila(std::stack<std::wstring> &pila);
 
         void pila_action(std::stack<std::wstring> &pila, std::wstring action);
 
