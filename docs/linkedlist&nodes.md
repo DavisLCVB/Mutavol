@@ -1,4 +1,5 @@
-# LinkedList ``mtv::LinkedList<T>``
+# LinkedList 
+``mtv::LinkedList<T>``
 
 LinkedList es una estructura de tipo lista que se ha implementado para el manejo de
 información en el proyecto. La lista enlazada es una estructura de datos que consiste
@@ -38,7 +39,8 @@ pre-incremento y post-incremento para la obtención del siguiente nodo.
 diferencia de que los elementos no son mutables. Se componen de punteros a nodos y
 métodos para el recorrido al final de la lista
 
-# Node ``mtv::Node<T>``
+# Node 
+``mtv::Node<T>``
 
 Son las clases que componen la lista enlazada. Cada nodo contiene un valor y un
 puntero al siguiente nodo. Los nodos aplican el patrón de diseño Factory para su creación

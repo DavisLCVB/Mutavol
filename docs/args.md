@@ -1,4 +1,7 @@
-# Args ``mtv::Args``
+# Args
+``mtv::Args``
+
+[***args.hpp***](../source/args/args.hpp) | [***args.cpp***](../source/args/args.cpp)
 
 Esta clase está enfocada en el procesamiento de los argumentos pasados al programa.
 Procesa principalmente 4 argumentos:
@@ -19,7 +22,8 @@ Linux, ya que se encarga de obtener la ruta absoluta del archivo.
 Al usarse, el módulo retorna una instancia de la estructura ``ArgsResult`` que contiene
 los argumentos procesados y booleanos para indicar al programa si debe detenerse.
 
-# ArgsResult ``mtv::Args::ArgsResult``
+# ArgsResult 
+``mtv::Args::ArgsResult``
 
 Esta estructura contiene los argumentos procesados y 2 booleanos
 (``args_processed``y`should_exit`). El primero indica si los argumentos fueron
@@ -29,5 +33,6 @@ de que los argumentos sean procesados, pero las funciones de ayuda o versión se
 ejecutadas, el programa también debe detenerse (``should_exit``).
 
 <div style="text-align: center">
-<img src="../resources/args_result.png" alt="ArgsResult">
+<img src="../resources/DE1-ArgsResult.png" alt="ArgsResult">
 </div>
+

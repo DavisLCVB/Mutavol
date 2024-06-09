@@ -1,4 +1,7 @@
-# Buffer ``mtv::Buffer<T>``
+# Buffer 
+``mtv::Buffer<T>``
+
+[***buffer.hpp***](../source/core/buffer/buffer.hpp)
 
 La estructura buffer es intrínsecamente una lista enlazada que almacena cualquier tipo
 de dato, con la característica de que solo existe una instancia por cada tipo de dato
@@ -9,7 +12,7 @@ que se maneje.
 Almacenar datos en una instancia segura e independiente tanto del tipo de dato que se
 maneje como del contexto en el que se necesite.
 <div style="text-align: center;">
-<img src="../resources/buffer.png" alt="Buffer">
+<img src="../resources/DE2-Buffer.png" alt="Buffer">
 </div>
 
 ## Características
