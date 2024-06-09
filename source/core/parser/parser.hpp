@@ -23,10 +23,27 @@ namespace mtv
         bool error;
         Token_t current_token;
         std::string p_state;
+
+        //Parser LL(1) para condicionales
         void X();
         void S();
         void H();
         void Y();
+
+        //Parser LL(1) para estructuras de bloques condicionales
+        void Z();
+        void W();
+        void V();
+        bool ifflag;
+
+        //Parser LL(1) para estructuras de bloques de funciones
+        void F();
+        void I();
+        void A();
+        void B();
+        void C();
+        void T();
+
 
     public:
         ~Parser() = default;
@@ -46,9 +63,13 @@ namespace mtv
 
         Parser();
 
+        void get_next_token();
+
         void evaluate_whit_afd(const State &afd);
-        
+
         bool evaluate_conditional();
+
+        bool eval_struct_condition();
 
         void evaluate_apd();
 
