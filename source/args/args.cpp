@@ -136,7 +136,7 @@ namespace mtv {
         return std::regex_match(file, pattern);
 #endif // WIN32
 #ifdef __linux__
-        const std::regex pattern("\\/\\w+(\\/\\w+)+(\\.\\w+)*");
+        const std::regex pattern(R"(\/\w+(\/\w+)+(\.\w+)*)");
         return std::regex_match(file, pattern);
 #endif // __linux__
     }
