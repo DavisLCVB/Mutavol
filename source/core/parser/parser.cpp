@@ -340,12 +340,10 @@ namespace mtv
 
         while (this->p_state != "qf" && this->error == false && !this->current_token.lexem.empty())
         {
-            std::cout << "INICIO \n";
             if (this->p_state == "q0")
             {
                 if (this->current_token.type == TokenType::DTYPE)
                 {
-                    std::cout << "evaluando funcion "<< "\n";
                     evaluate_whit_afd(this->afdFuncs);
                     get_next_token();
                     F();
@@ -358,18 +356,6 @@ namespace mtv
                 else
                     this->error = true;
             }
-            else if (this->p_state == "q1")
-            {
-                try
-                {
-                    I();
-                }
-                catch (const std::runtime_error &e)
-                {
-                    this->error = true;
-                }
-            }
-
         }
 
         if (this->error == false && this->p_state == "qf")

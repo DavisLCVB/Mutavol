@@ -1,6 +1,6 @@
 int main(int a)
 {	int a = 2;
-    if
+    if (a > 10)
     {
         if (a > 10)
         {}
