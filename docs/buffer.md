@@ -11,10 +11,6 @@ que se maneje.
 
 Almacenar datos en una instancia segura e independiente tanto del tipo de dato que se
 maneje como del contexto en el que se necesite.
-<div style="text-align: center;">
-<img src="../resources/DE2-Buffer.png" alt="Buffer">
-</div>
-
 ## Características
 
 El buffer aplica el patrón de singleton, sin embargo, al ser una plantilla o *template*

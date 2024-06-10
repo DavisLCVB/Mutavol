@@ -31,8 +31,3 @@ procesados mientras que el segundo si el programa debe detenerse.
 En caso de que los argumentos no sean procesados, el programa debe detenerse. En caso
 de que los argumentos sean procesados, pero las funciones de ayuda o versión sean las
 ejecutadas, el programa también debe detenerse (``should_exit``).
-
-<div style="text-align: center">
-<img src="../resources/DE1-ArgsResult.png" alt="ArgsResult">
-</div>
-
