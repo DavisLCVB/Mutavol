@@ -25,6 +25,8 @@ namespace mtv {
         [[nodiscard]]
         LinkedList<Token_t> get_tokens() const;
 
+        static void clean_own_buff();
+
     private:
         static std::unique_ptr<Slicer> instance;
         LinkedList<Token_t> tokens;

@@ -11,4 +11,6 @@ int test_parser(const int argc, char *argv[]);
 
 int coin_test(const int argc, char *argv[]);
 
+int test_interpreter();
+
 #endif //TEST_SOURCES_HPP

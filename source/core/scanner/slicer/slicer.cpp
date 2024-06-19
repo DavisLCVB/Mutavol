@@ -18,6 +18,12 @@ namespace mtv {
         instance.reset(new Slicer());
     }
 
+    void Scanner::Slicer::clean_own_buff() {
+        auto &buff_tok = Buffer<LinkedList<std::pair<wchar_t,
+                 Position> > >::get_instance();
+        buff_tok.clear();
+    }
+
     Scanner::Slicer &Scanner::Slicer::get_instance() {
         if (instance == nullptr) {
             instance.reset(new Slicer());

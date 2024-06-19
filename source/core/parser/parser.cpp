@@ -6,8 +6,6 @@ namespace mtv
 {
     std::unique_ptr<Parser> Parser::instance = nullptr;
 
-    std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
-
     Parser::Parser()
     {
         // Inicializacion del flag de if
@@ -95,7 +93,7 @@ namespace mtv
 
     void Parser::get_next_token()
     {
-        this->current_token = mtv::Scanner::get();
+        this->current_token = Scanner::get();
         std::wcout << L"Token: " << this->current_token.lexem << L"\n";
     }
 
@@ -226,7 +224,7 @@ namespace mtv
         }
         else
         {
-            std::string lexem_str = converter.to_bytes(current_token.lexem);
+            std::string lexem_str = wstring_to_string(current_token.lexem);
             throw std::runtime_error("Token inesperado:" + lexem_str);
         }
     }

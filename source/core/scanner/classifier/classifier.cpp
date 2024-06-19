@@ -16,7 +16,7 @@ namespace mtv
         L"(if)|(else)|(while)|(for)$";
     const std::wstring Scanner::Classifier::DTYPES =
         L"(void)|(char)|(string)|(int)|(float)|(bool)$";
-    const std::wstring Scanner::Classifier::LITERALS = L"(\"(.)*\")|([0-9]+)";
+    const std::wstring Scanner::Classifier::LITERALS = L"(\".*\")|([0-9]+)";
     const std::wstring Scanner::Classifier::DELIMITERS =
         LR"((\()|(\))|(\[)|(\])|(\{)|(\})|(,)|(;))";
 

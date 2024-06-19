@@ -14,9 +14,22 @@ namespace mtv {
         instance.reset(new Reader(input_file));
     }
 
+    //PARA EL INTERPRETE
+    void Scanner::Reader::init_instance() {
+        instance.reset(new Reader());
+    }
+
     Scanner::Reader &Scanner::Reader::get_instance(const std::string &input_file) {
         if (instance == nullptr) {
             init_instance(input_file);
+        }
+        return *instance;
+    }
+
+    //PARA EL INTERPRETE
+    Scanner::Reader &Scanner::Reader::get_instance() {
+        if (instance == nullptr) {
+            init_instance();
         }
         return *instance;
     }
@@ -60,6 +73,29 @@ namespace mtv {
         auto &buff = Buffer<LinkedList<pair> >::get_instance();
         const auto ll = ListFactory::create_linked_list<pair>();
         for (const auto &c: _file) {
+            ll->push(std::make_pair(c, Position(row, column)));
+            if (c == L'\n') {
+                buff.push(*ll);
+                ++row;
+                column = 1;
+                ll->clear();
+            } else {
+                ++column;
+            }
+        }
+        if (!ll->is_empty()) {
+            buff.push(*ll);
+        }
+        delete ll;
+        return true;
+    }
+
+    bool Scanner::Reader::read_cin(const std::wstring &line) {
+        using pair = std::pair<wchar_t, Position>;
+        size_t row{1}, column{1};
+        auto &buff = Buffer<LinkedList<pair> >::get_instance();
+        const auto ll = ListFactory::create_linked_list<pair>();
+        for (const auto &c: line) {
             ll->push(std::make_pair(c, Position(row, column)));
             if (c == L'\n') {
                 buff.push(*ll);

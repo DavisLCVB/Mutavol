@@ -1,12 +1,20 @@
 #ifndef FORMAT_HPP
 #define FORMAT_HPP
 
+#include <codecvt>
+
 #include "../utils.hpp"
 #include <iostream>
+#include <locale>
 #include <string>
 
 namespace mtv
 {
+    inline std::string wstring_to_string(const std::wstring& wstr) {
+        // Convierte std::wstring a std::string
+        std::wstring_convert<std::codecvt_utf8<wchar_t>> conv;
+        return conv.to_bytes(wstr);
+    }
     inline std::ostream &operator<<(std::ostream &os, const Position &pos)
     {
         os << pos.row << ";" << pos.column;
