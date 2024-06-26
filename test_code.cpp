@@ -1,3 +1,4 @@
+
 int main(int a){
     a=2;
     int b = 5;
@@ -10,11 +11,6 @@ int main(int a){
 
     }
     function(a, b, c);
-    for( int i=0 ; i<5 ; i++ ){
-
-    }
+    for (int i = 0; i < 5; i++){}
 }
-
-void arroba(){
-    
-}
+void arroba(){}

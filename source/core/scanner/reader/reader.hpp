@@ -27,6 +27,12 @@ namespace mtv {
         */
         static Reader &get_instance(const std::string &input_file);
 
+        /**
+        * @brief Gets the instance of the Reader class
+        * @return The instance of the Reader class
+        */
+        static Reader &get_instance();
+
         // Deleted copy constructor
         Reader(const Reader &) = delete;
 
@@ -39,6 +45,9 @@ namespace mtv {
         */
         [[nodiscard]]
         bool read() const;
+
+        [[nodiscard]]
+        bool static read_cin(const std::wstring &line);
 
     private:
         // string to store the input file
@@ -80,10 +89,16 @@ namespace mtv {
         */
         explicit Reader(string input_file) : input_file(std::move(input_file)) {}
 
+        Reader() = default;
         /**
         * Method to initialize the pointer to the unique instance of the class
         */
         static void init_instance(const std::string &input_file);
+
+        /**
+        * Method to initialize the pointer to the unique instance of the class
+        */
+        static void init_instance();
     }; // class Reader
 } // namespace mtv
 

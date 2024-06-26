@@ -9,6 +9,8 @@ namespace mtv {
     class Scanner {
     public:
         static void init_scanner(const std::string &input_file) noexcept(false);
+        //PARA EL INTERPRETE
+        static void init_scanner() noexcept(false);
 
         static Token_t get();
 

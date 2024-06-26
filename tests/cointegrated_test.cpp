@@ -27,3 +27,11 @@ int test_parser(const int argc, char *argv[]) {
 
     return 0;
 }
+
+int test_interpreter() {
+
+    auto &parser = mtv::Iparser::get_instance();
+    parser.parse();
+
+    return 0;
+}

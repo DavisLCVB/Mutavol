@@ -20,6 +20,26 @@ namespace mtv {
         }
     }
 
+    void Scanner::init_scanner() noexcept(false) {
+        std::wstring line;
+        std::getline(std::wcin, line);
+        if (!Reader::read_cin(line)) {
+            throw std::runtime_error("Error reading input");
+        }
+        auto &classifier = Classifier::get_instance();
+        Classifier::init_slicer();
+        //PARA EL INTERPRETE
+        Slicer::clean_own_buff();
+
+        auto &buff_tok = Buffer<Token_t>::get_instance();
+        buff_tok.clear();
+        while(true) {
+            auto tok = classifier.next_token();
+            buff_tok.push(tok);
+            if(tok.lexem == L"$") break;
+        }
+    }
+
     Token_t Scanner::get() {
         auto &buff = Buffer<Token_t>::get_instance();
         auto tok = buff[0];

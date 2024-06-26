@@ -6,5 +6,6 @@
 #include "core/parser/parser.hpp"
 #include "core/scanner/scanner.hpp"
 #include "core/buffer/buffer.hpp"
+#include "interpreter/interpreter.hpp"
 
 #endif // MUTAVOL
