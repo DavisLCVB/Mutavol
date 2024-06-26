@@ -21,7 +21,9 @@ namespace mtv {
          * @brief Constructor for the Node class
          * @param _data The data to store in the node
          */
-        explicit Node(const T &_data) : data(_data), next(nullptr) {}
+        explicit Node(const T &_data) : data(_data), next(nullptr), prev(nullptr) {
+        }
+
         /**
          * @brief Method to set the data of the node
          * @param _data the data to store in the node
@@ -54,6 +56,18 @@ namespace mtv {
         virtual const Node *get_next() const { return next; }
 
         /**
+         * @brief Method to set the previous node
+         * @param prev The previous node
+         */
+
+        virtual void set_prev(Node *prev) { this->prev = prev; }
+        /**
+         * @brief Method to get a pointer to the previous node
+         * @return The previous node
+         */
+        virtual Node *get_prev() { return prev; }
+
+        /**
          * @brief Destructor for the Node class
          */
         virtual ~Node() = default;
@@ -63,6 +77,8 @@ namespace mtv {
         T data;
         // Pointer to the next node
         Node *next;
+        // Pointer to the previous node
+        Node *prev;
     };
 } // namespace mtv
 
