@@ -5,7 +5,7 @@
 void separator();
 
 int main(const int argc, char *argv[]) {
-    test_interpreter();
+    test_parser(argc, argv);
     return 0;
 }
 

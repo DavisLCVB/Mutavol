@@ -480,6 +480,7 @@ namespace mtv
         }
         else if (this->current_token.lexem == L"=")
         {
+            get_next_token();
             evaluate_math_exp();
         }
         else

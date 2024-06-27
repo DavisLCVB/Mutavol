@@ -5,7 +5,7 @@ int main(int a){
     int c = 6;
     int variable = 10;
     if ( (a<2) && variable>10 || (b>10)) {
-
+        a = 10 * 4 + 5;
     }
     while( a<10 && b>10 || c<10 ) {
 

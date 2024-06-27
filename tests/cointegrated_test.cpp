@@ -21,7 +21,7 @@ int test_parser(const int argc, char *argv[]) {
     if (!result.args_processed) return -1;
     if (result.should_exit) return 0;
     mtv::Scanner::init_scanner(result.input);
-
+    std::cout << "Parsing...\n";
     auto &parser = mtv::Parser::get_instance();
     parser.parse();
 
