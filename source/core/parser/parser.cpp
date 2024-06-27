@@ -480,10 +480,7 @@ namespace mtv
         }
         else if (this->current_token.lexem == L"=")
         {
-            do
-            {
-                get_next_token();
-            } while (this->current_token.lexem != L";");
+            evaluate_math_exp();
         }
         else
         {
@@ -553,4 +550,31 @@ namespace mtv
         putIn = value->second;
         return true;
     }
+
+    void Parser::evaluate_math_exp()
+    {
+        S_math();
+        if(this->current_token.lexem != L";") {
+            throw std::runtime_error("Token esperado: ';'");
+        }
+    }
+
+    void Parser::S_math() {
+        if(current_token.type == TokenType::IDENTIFIER || current_token.type == TokenType::LITERAL) {
+            get_next_token();
+            while(current_token.lexem != L";") {
+                if(current_token.type != TokenType::OPERATOREXP) {
+                    throw std::runtime_error("Token esperado: OPERATOREXP");
+                }
+                get_next_token();
+                if(current_token.type != TokenType::IDENTIFIER && current_token.type != TokenType::LITERAL) {
+                    throw std::runtime_error("Token esperado: IDENTIFIER o LITERAL");
+                }
+                get_next_token();
+            }
+        } else {
+            throw std::runtime_error("Token esperado: IDENTIFIER o LITERAL");
+        }
+    }
+
 } // namespace mtv

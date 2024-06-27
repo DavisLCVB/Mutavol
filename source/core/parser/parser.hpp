@@ -80,6 +80,11 @@ namespace mtv
         bool sgetValues(auto &putIn, auto &map, std::string key);
 
         bool wsgetValues(auto &putIn, auto &map, std::wstring key);
+
+        void evaluate_math_exp();
+
+        void S_math();
+        void A_math();
     };
 } // namespace mtv
 
