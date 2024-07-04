@@ -300,9 +300,9 @@ namespace mtv {
 
         for(std::wstring &e : this->expr) {
             if(e == L";" || e ==L",") break;
-            if(e == L"^") {
+            if(e == L"^")
                 stackOperators.push(e);
-            } else if(e == L"+" || e == L"-") {
+            else if(e == L"+" || e == L"-") {
                 while (!stackOperators.empty() && stackOperators.top() == L"^") {
                     evaluate_operands(stackOperators, stackOperands);
                 }

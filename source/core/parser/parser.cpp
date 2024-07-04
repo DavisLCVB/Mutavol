@@ -266,7 +266,7 @@ namespace mtv {
         return pila.top();
     }
 
-    void Parser::pila_action(std::stack<std::wstring> &pila, const std::wstring& action) {
+    void Parser::pila_action(std::stack<std::wstring> &pila, const std::wstring &action) {
         if (action == L"d") {
             if (pila.empty()) {
                 this->error = true;
@@ -460,7 +460,8 @@ namespace mtv {
     void Parser::evaluate_math_exp() {
         S_math();
         if (this->current_token.lexem != L";") {
-            throw std::runtime_error("Token esperado: ';'");
+            throw std::runtime_error("Token esperado: ';' - " + std::to_string(current_token.pos.row) + ", " +
+                                     std::to_string(current_token.pos.column));
         }
     }
 
@@ -468,42 +469,55 @@ namespace mtv {
         if (current_token.type == TokenType::IDENTIFIER || current_token.type == TokenType::LITERAL) {
             get_next_token();
             A_math();
+        } else if (current_token.lexem == L"(") {
+            get_next_token();
+            if(current_token.type != TokenType::IDENTIFIER && current_token.type != TokenType::LITERAL) {
+                throw std::runtime_error("Token esperado: IDENTIFIER o LITERAL - " + std::to_string(current_token.pos.row) + ", " +
+                                         std::to_string(current_token.pos.column));
+            }
+            get_next_token();
+            A_math();
+            if (current_token.lexem != L")") {
+                throw std::runtime_error("Token esperado: ')' - " + std::to_string(current_token.pos.row) + ", " +
+                                         std::to_string(current_token.pos.column));
+            }
+            get_next_token();
+            A_math();
         } else {
-            throw std::runtime_error("Token esperado: IDENTIFIER o LITERAL");
+            throw std::runtime_error("Token esperado: IDENTIFIER, LITERAL o '(' - " + std::to_string(current_token.pos.row) +
+                                     ", " + std::to_string(current_token.pos.column));
         }
     }
 
     void Parser::A_math() {
-        if (current_token.lexem == L";") {
+        if (current_token.lexem == L";" || current_token.lexem == L")") {
             return;
         }
-        if (current_token.type == TokenType::OPERATOREXP) {
-            get_next_token();
-            if (current_token.type == TokenType::IDENTIFIER || current_token.type == TokenType::LITERAL) {
-                get_next_token();
-                B_math();
-            } else {
-                throw std::runtime_error("Token esperado: IDENTIFIER o LITERAL");
-            }
-        } else {
-            throw std::runtime_error("Token esperado: OPERATOREXP");
+        if (current_token.type != TokenType::OPERATOREXP) {
+            throw std::runtime_error("Token esperado: OPERATOREXP - " + std::to_string(current_token.pos.row) + ", " +
+                                     std::to_string(current_token.pos.column));
         }
-    }
-
-    void Parser::B_math() {
-        if (current_token.lexem == L";") {
-            return;
-        }
-        if (current_token.type == TokenType::OPERATOREXP) {
+        get_next_token();
+        if (current_token.type == TokenType::IDENTIFIER || current_token.type == TokenType::LITERAL) {
             get_next_token();
-            if (current_token.type == TokenType::IDENTIFIER || current_token.type == TokenType::LITERAL) {
-                get_next_token();
-                B_math();
-            } else {
-                throw std::runtime_error("Token esperado: IDENTIFIER o LITERAL");
+            A_math();
+        } else if (current_token.lexem == L"(") {
+            get_next_token();
+            if (current_token.type != TokenType::IDENTIFIER && current_token.type != TokenType::LITERAL) {
+                throw std::runtime_error("Token esperado: IDENTIFIER o LITERAL - " + std::to_string(current_token.pos.row) +
+                                         ", " + std::to_string(current_token.pos.column));
             }
+            get_next_token();
+            A_math();
+            if (current_token.lexem != L")") {
+                throw std::runtime_error(
+                    "Token esperado: ')' - " + std::to_string(current_token.pos.row) + ", " + std::to_string(
+                        current_token.pos.column));
+            }
+            A_math();
         } else {
-            throw std::runtime_error("Token esperado: OPERATOREXP");
+            throw std::runtime_error("Token esperado: IDENTIFIER, LITERAL o '(' - " + std::to_string(current_token.pos.row) +
+                                     ", " + std::to_string(current_token.pos.column));
         }
     }
 } // namespace mtv

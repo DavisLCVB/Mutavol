@@ -84,7 +84,6 @@ namespace mtv
 
         void S_math();
         void A_math();
-        void B_math();
     };
 } // namespace mtv
 
