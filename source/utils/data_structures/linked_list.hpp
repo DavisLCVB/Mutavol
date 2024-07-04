@@ -61,27 +61,29 @@ namespace mtv {
          */
         void push(const T &data, const size_t index) noexcept(false) {
             if (!check_index(index, true)) {
-                throw std::out_of_range("Index out of range");
+                const std::string msg =
+                        "Index out of range: " + std::to_string(index) + " " +
+                        std::to_string(size) + "\n";
+                throw std::out_of_range(msg);
             }
-            auto node = NodeFactory::create_simple_node(data);
-            if (size == 0) {
-                head = node;
-                tail = node;
-            } else if (index == 0) {
-                node->set_next(head);
-                head = node;
-            } else if (index == size) {
-                tail->set_next(node);
-                tail = node;
+            auto new_node = NodeFactory::create_simple_node(data);
+            if (index == 0) {
+                new_node->set_next(head);
+                head = new_node;
+                if (size == 0) {
+                    tail = head;
+                }
             } else {
                 auto current = head;
                 for (size_t i = 0; i < index - 1; ++i) {
                     current = current->get_next();
                 }
-                node->set_next(current->get_next());
-                current->set_next(node);
+                new_node->set_next(current->get_next());
+                current->set_next(new_node);
+                if (index == size) {
+                    tail = new_node;
+                }
             }
-            size++;
         }
 
         /**
@@ -106,6 +108,9 @@ namespace mtv {
                 auto temp = head;
                 head = head->get_next();
                 delete temp;
+                if (size == 1) {
+                    tail = nullptr;
+                }
             } else {
                 auto current = head;
                 for (size_t i = 0; i < index - 1; ++i) {
@@ -114,8 +119,10 @@ namespace mtv {
                 auto temp = current->get_next();
                 current->set_next(temp->get_next());
                 delete temp;
+                if (index == size - 1) {
+                    tail = current;
+                }
             }
-            size--;
         }
 
         /**
@@ -188,11 +195,16 @@ namespace mtv {
         [[nodiscard]]
         bool contains(const T &data) const {
             auto current = head;
-            while (current != nullptr) {
-                if (current->get_data() == data) {
+            auto current2 = tail;
+            while (current != nullptr && current2 != nullptr) {
+                if(current == current2) {
+                    return current->get_data() == data;
+                }
+                if (current->get_data() == data || current2->get_data() == data) {
                     return true;
                 }
                 current = current->get_next();
+                current2 = current2->get_prev();
             }
             return false;
         }

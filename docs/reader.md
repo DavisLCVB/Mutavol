@@ -8,9 +8,6 @@ estructura `Buffer`.
 Convertir el archivo a una estructura `Buffer<LinkedList<std::pair<wchar_t,
 Position>>>` y limpiar los comentarios y líneas vacías que se encuentre.
 
-<div style="text-align: center;">
-<img src="../resources/file_to_buff.png" alt="Conversión de archivo a Buffer">
-</div>
 
 ## Características
 

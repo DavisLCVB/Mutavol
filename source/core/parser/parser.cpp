@@ -109,9 +109,8 @@ namespace mtv
             }
 
             auto transition = afd.find(state);
-            if (transition == afd.end())
-            {
-                // Simbolo de salida no encontrado
+            if (transition == afd.end()) {
+                // Estado no encontrado
                 this->error = true;
                 break;
             }
@@ -166,7 +165,6 @@ namespace mtv
                 throw std::runtime_error("Error");
 
             /*             this->current_token = Scanner::get();
-
                         if (current_token.lexem != L"{")
                             throw std::runtime_error("Token esperado: '{'"); */
         }
@@ -185,8 +183,7 @@ namespace mtv
             S();
             if (current_token.lexem != L")")
                 throw std::runtime_error("token esperado1: ')'");
-
-            get_next_token();
+            this->current_token = mtv::Scanner::get();
             Y();
         }
         else
@@ -207,7 +204,8 @@ namespace mtv
 
             get_next_token();
 
-            if (current_token.type != TokenType::IDENTIFIER && current_token.type != TokenType::LITERAL)
+            if (current_token.type != TokenType::IDENTIFIER && current_token.type !=
+                TokenType::LITERAL)
                 throw std::runtime_error("Identificador o literal esperado");
 
             get_next_token();
@@ -350,7 +348,6 @@ namespace mtv
                     this->error = true;
             }
         }
-
         if (this->error == false && this->p_state == "qf")
             std::wcout << L"Pertenece al lenguaje\n";
         else
