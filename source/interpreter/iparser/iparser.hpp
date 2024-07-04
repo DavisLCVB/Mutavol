@@ -5,7 +5,8 @@
 #include <stack>
 #include <cmath>
 #include <tuple>
-
+#include <optional>
+#include <windows.h>
 #include "../source/utils/format/format.hpp"
 #include "../../utils/data_structures/types.hpp"
 #include "../../core/scanner/scanner.hpp"
@@ -22,6 +23,8 @@ namespace mtv {
         row temp_declaration;
         int ts_pointer;
         double memoria[100];
+
+        std::wstring last_var;
 
         std::vector<Token_t> output;
 
@@ -45,6 +48,7 @@ namespace mtv {
 
             Token_t tok;
 
+            void assign_value();
             void get_next_token();
             void get_next_expr_value();
             double evaluate_expr();
@@ -53,14 +57,19 @@ namespace mtv {
             void get_next_output();
             void my_cout();
 
+            std::optional<double> getvar(const std::wstring &var);
+
             void evaluate_whit_afd(const State &afd);
             // Parser LL(1) - Expresiones generales
             void Z();
             void A();
             void B();
             void C();
+            //Parser LL(1) para salida de consola
             void D();
             void E();
+            void K();
+            void V();
 
             // Parser LL(1) - Expresiones aritmeticas
             void W();
@@ -69,6 +78,8 @@ namespace mtv {
             void P();
             void O();
             void F();
+
+            void enableColors();
     };
 } // namespace mtv
 
