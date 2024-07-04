@@ -4,6 +4,7 @@
 #include <regex>
 #include <filesystem>
 #include "../utils/utils.hpp"
+#include <string>
 
 namespace mtv {
     LinkedList<std::string> *Args::args_template =
@@ -38,12 +39,14 @@ namespace mtv {
 
     void Args::convert_args_to_list(const int argc, char *argv[]) {
         for (int i = 1; i < argc; i++) {
-            args->push(argv[i]);
+            std::string arg = argv[i];
+            args->push(arg);
         }
     }
 
     Args::ArgsResult Args::analize_list() {
         auto it = args->begin();
+        auto d = args;
         while (it != args->end()) {
             if (const std::string arg = *it; args_template->contains(arg)) {
                 if (arg == "--help" || arg == "-h") {

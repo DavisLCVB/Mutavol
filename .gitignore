@@ -8,3 +8,4 @@ replit.nix
 cmake-build-release
 msvc-debug
 .vs/
+out/

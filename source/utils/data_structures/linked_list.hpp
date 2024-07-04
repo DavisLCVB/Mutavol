@@ -84,6 +84,7 @@ namespace mtv {
                     tail = new_node;
                 }
             }
+            ++size;
         }
 
         /**
@@ -123,6 +124,7 @@ namespace mtv {
                     tail = current;
                 }
             }
+            --size;
         }
 
         /**
@@ -195,16 +197,11 @@ namespace mtv {
         [[nodiscard]]
         bool contains(const T &data) const {
             auto current = head;
-            auto current2 = tail;
-            while (current != nullptr && current2 != nullptr) {
-                if(current == current2) {
-                    return current->get_data() == data;
-                }
-                if (current->get_data() == data || current2->get_data() == data) {
+            while (current != nullptr) {
+                if (current->get_data() == data) {
                     return true;
                 }
                 current = current->get_next();
-                current2 = current2->get_prev();
             }
             return false;
         }
