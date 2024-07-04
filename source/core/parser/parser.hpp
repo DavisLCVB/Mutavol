@@ -2,9 +2,8 @@
 #ifndef PASER_HPP
 #define PARSER_HPP
 #include <memory>
-#include "../source/utils/format/format.hpp"
 #include "../../utils/data_structures/types.hpp"
-#include "../scanner/scanner.hpp"
+#include "../../utils/format/format.hpp"
 #include <stack>
 
 namespace mtv
@@ -73,9 +72,9 @@ namespace mtv
 
         void evaluate_apd();
 
-        std::wstring evaluate_pila(std::stack<std::wstring> &pila);
+        static std::wstring evaluate_pila(std::stack<std::wstring> &pila);
 
-        void pila_action(std::stack<std::wstring> &pila, std::wstring action);
+        void pila_action(std::stack<std::wstring> &pila, const std::wstring& action);
 
         bool sgetValues(auto &putIn, auto &map, std::string key);
 
@@ -85,6 +84,7 @@ namespace mtv
 
         void S_math();
         void A_math();
+        void B_math();
     };
 } // namespace mtv
 
