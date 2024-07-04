@@ -138,6 +138,7 @@ namespace mtv {
             } catch (std::runtime_error &e) {
                 this->expr.clear();
                 this->output.clear();
+                this->last_var.clear();
                 this->temp_declaration = std::make_tuple(L"", L"", this->ts_pointer);
                 std::wcout << L"Error en la posicion: " << this->tok.pos.column << L"\n";
                 std::wcout << L"Error en la lexema: " << this->tok.lexem << L" - type:" << type_wstr(this->tok.type) << L"\n";
@@ -176,9 +177,12 @@ namespace mtv {
             E();
             my_cout();
         } else if(this->tok.type == TokenType::IDENTIFIER ) {
+            this->last_var= this->tok.lexem;
             get_next_token();
             B();
-            evaluate_expr();
+            assign_value();
+        } else {
+            throw std::runtime_error("Token esperado: DTYPE, cout o IDENTIFIER");
         }
     }
 
@@ -190,7 +194,7 @@ namespace mtv {
                 throw std::runtime_error("Token esperado para terminar la instrucción: ;");
             }
         } else {
-            throw std::runtime_error("Token esperado para comenzar la asignación: =");
+            throw std::runtime_error("Token esperado para comenzar la asignacion: =");
         }
     }
 
@@ -362,7 +366,7 @@ namespace mtv {
                     std::optional<double> r = getvar(e);
                     if(!r.has_value()){
                         std::string lexem_str = wstring_to_string(e);
-                        throw std::runtime_error("La variable " + lexem_str + "no ha sido declarada.");
+                        throw std::runtime_error("La variable " + lexem_str + " no ha sido declarada.");
                     }
                     stackOperands.push(r.value());
                 }
@@ -391,17 +395,16 @@ namespace mtv {
         operands.pop();
         const double op1 = operands.top();
         operands.pop();
-
         if(op == L"+") {
-            operands.push(op2 + op1);
+            operands.push(op1 + op2);
         } else if(op == L"-") {
-            operands.push(op2 - op1);
+            operands.push(op1 - op2);
         } else if(op == L"*") {
-            operands.push(op2 * op1);
+            operands.push(op1 * op2);
         } else if(op == L"/") {
-            operands.push(op2 / op1);
+            operands.push(op1 / op2);
         } else if(op == L"^") {
-            operands.push(std::pow(op2, op1));
+            operands.push(std::pow(op1, op2));
         } else if(op == L"%") {
             operands.push(std::fmod(op2, op1));
         }
@@ -424,6 +427,18 @@ namespace mtv {
         this->output.clear();
         std::wcout << L"\033[0m" << std::endl;
     }
+
+    void Iparser::assign_value() {
+        for(row &r : this->ts) {
+            if(std::get<1>(r) == this->last_var) {
+                this->memoria[std::get<2>(r)] = evaluate_expr();
+                this->last_var.clear();
+                return;
+            }
+        }
+        throw std::runtime_error("La variable " + wstring_to_string(this->last_var) + " no ha sido declarada.");
+    }
+
 
     std::optional<double> Iparser::getvar(const std::wstring &var) {
         for(row &r : this->ts) {

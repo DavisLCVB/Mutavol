@@ -24,6 +24,8 @@ namespace mtv {
         int ts_pointer;
         double memoria[100];
 
+        std::wstring last_var;
+
         std::vector<Token_t> output;
 
         public:
@@ -46,6 +48,7 @@ namespace mtv {
 
             Token_t tok;
 
+            void assign_value();
             void get_next_token();
             void get_next_expr_value();
             double evaluate_expr();
