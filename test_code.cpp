@@ -17,5 +17,7 @@ int main(int a){
     x = (20*30)+55 -4;
     x = x * 2 + 5;
     x = (40 + 55);
+	// Descomentar para error
+	//x = (40 + 55;
 }
 void arroba(){}
