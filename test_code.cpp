@@ -1,5 +1,6 @@
 int main(int a)
 {	int a = 2;
+    cout << " ";
     if (a > 10)
     {
         if (a > 10)

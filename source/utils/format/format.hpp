@@ -7,6 +7,7 @@
 #include <iostream>
 #include <locale>
 #include <string>
+#include <sstream>
 
 namespace mtv
 {
@@ -15,6 +16,14 @@ namespace mtv
         std::wstring_convert<std::codecvt_utf8<wchar_t>> conv;
         return conv.to_bytes(wstr);
     }
+    inline std::wstring double_to_wstring(const double &d)
+    {
+        // Convierte double a std::wstring
+        std::wstringstream ss;
+        ss << d;
+        return ss.str();
+    }
+
     inline std::ostream &operator<<(std::ostream &os, const Position &pos)
     {
         os << pos.row << ";" << pos.column;

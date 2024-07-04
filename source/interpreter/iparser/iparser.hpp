@@ -59,8 +59,11 @@ namespace mtv {
             void A();
             void B();
             void C();
+            //Parser LL(1) para salida de consola
             void D();
             void E();
+            void K();
+            void V();
 
             // Parser LL(1) - Expresiones aritmeticas
             void W();
@@ -69,6 +72,8 @@ namespace mtv {
             void P();
             void O();
             void F();
+
+
     };
 } // namespace mtv
 

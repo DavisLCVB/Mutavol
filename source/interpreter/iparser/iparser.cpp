@@ -142,6 +142,8 @@ namespace mtv {
             try {
                 Z();
             } catch (std::runtime_error &e) {
+                this->expr.clear();
+                this->output.clear();
                 std::wcout << L"Error en la linea: " << this->tok.pos.row << L" columna: " << this->tok.pos.column << L"\n";
                 std::wcout << L"Error en la lexema: " << this->tok.lexem << L" type:" << type_wstr(this->tok.type) << L"\n";
                 std::wcout << e.what() << std::endl;
@@ -202,12 +204,40 @@ namespace mtv {
             get_next_token();
             if(this->tok.lexem == L"<") {
                 get_next_output();
-                if(this->tok.type == TokenType::IDENTIFIER || this->tok.type == TokenType::LITERAL) {
+                K();
+                D();
+                /*if(this->tok.type == TokenType::IDENTIFIER || this->tok.type == TokenType::LITERAL) {
                     get_next_token();
                     D();
-                }
+                }*/
             }
         } else {
+            throw std::runtime_error("Error en la linea: " + std::to_string(this->tok.pos.row) + " columna: " + std::to_string(this->tok.pos.column));
+        }
+    }
+
+    void Iparser::K() {
+        if(this->tok.type == TokenType::IDENTIFIER || this->tok.type == TokenType::LITERAL) {
+            this->expr.push_back(this->tok.lexem);
+            C();
+            const double result = evaluate_expr();
+            this->output.back().lexem = std::to_wstring(result);
+            this->output.back().type = TokenType::LITERAL;
+        } else if(this->tok.lexem == L"\"") {
+            get_next_token();
+            this->output.back().type = TokenType::LITERAL;
+            this->output.back().lexem = this->tok.lexem + L" ";
+            while(this->tok.lexem != L"\"") {
+                get_next_token();
+                this->output.back().lexem += this->tok.lexem +L" ";
+            }
+            //Eliminamos el " " y la "
+            this->output.back().lexem.pop_back();
+            this->output.back().lexem.pop_back();
+            //Refresh del siguiente token para la funcion D
+            get_next_token();
+        }
+        else {
             throw std::runtime_error("Error en la linea: " + std::to_string(this->tok.pos.row) + " columna: " + std::to_string(this->tok.pos.column));
         }
     }
@@ -234,7 +264,7 @@ namespace mtv {
         } else if(this->tok.lexem == L"-") {
             get_next_expr_value();
             C();
-        } else if(this->tok.lexem == L";" || this->tok.lexem == L"," || this->tok.lexem == L")") {
+        } else if(this->tok.lexem == L";" || this->tok.lexem == L"," || this->tok.lexem == L"<" || this->tok.lexem == L")") {
             //lambda
         } else {
             throw std::runtime_error("Error en la linea: " + std::to_string(this->tok.pos.row) + " columna: " + std::to_string(this->tok.pos.column));
@@ -253,7 +283,7 @@ namespace mtv {
         } else if(this->tok.lexem == L"/") {
             get_next_expr_value();
             W();
-        } else if(this->tok.lexem == L";" || this->tok.lexem == L"," || this->tok.lexem == L")" || this->tok.lexem == L"+" || this->tok.lexem == L"-") {
+        } else if(this->tok.lexem == L";" || this->tok.lexem == L"," || this->tok.lexem == L"<" || this->tok.lexem == L")" || this->tok.lexem == L"+" || this->tok.lexem == L"-") {
             //lambda
         } else {
             throw std::runtime_error("Error en la linea: " + std::to_string(this->tok.pos.row) + " columna: " + std::to_string(this->tok.pos.column));
@@ -270,7 +300,7 @@ namespace mtv {
         if(this->tok.lexem == L"^") {
             get_next_expr_value();
             Y();
-        } else if(this->tok.lexem == L"*" || this->tok.lexem == L"/" || this->tok.lexem == L"+" || this->tok.lexem == L"-" || this->tok.lexem == L";" || this->tok.lexem == L"," || this->tok.lexem == L")") {
+        } else if(this->tok.lexem == L"*" || this->tok.lexem == L"/" || this->tok.lexem == L"+" || this->tok.lexem == L"-" || this->tok.lexem == L";" || this->tok.lexem == L"," || this->tok.lexem == L"<" || this->tok.lexem == L")") {
             //lambda
         } else {
             throw std::runtime_error("Error en la linea: " + std::to_string(this->tok.pos.row) + " columna: " + std::to_string(this->tok.pos.column));
@@ -299,7 +329,7 @@ namespace mtv {
         std::stack<double> stackOperands;
 
         for(std::wstring &e : this->expr) {
-            if(e == L";" || e ==L",") break;
+            if(e == L";" || e ==L"," || e == L"<") break;
             if(e == L"^") {
                 stackOperators.push(e);
             } else if(e == L"+" || e == L"-") {
@@ -343,7 +373,9 @@ namespace mtv {
                         }
                     }
                     std::string lexem_str = wstring_to_string(e);
-                    if(!band) throw std::runtime_error("La variable " + lexem_str + " no ha sido declarada.");
+                    if(!band) {
+                        throw std::runtime_error("La variable " + lexem_str + " no ha sido declarada.");
+                    }
                 }
             }
         }
