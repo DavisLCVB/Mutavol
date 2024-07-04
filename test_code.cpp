@@ -12,5 +12,10 @@ int main(int a){
     }
     function(a, b, c);
     for (int i = 0; i < 5; i++){}
+    // Test exp math
+    int x = 10;
+    x = (20*30)+55 -4;
+    x = x * 2 + 5;
+    x = (40 + 55);
 }
 void arroba(){}
