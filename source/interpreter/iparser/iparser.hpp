@@ -5,7 +5,8 @@
 #include <stack>
 #include <cmath>
 #include <tuple>
-
+#include <optional>
+#include <windows.h>
 #include "../source/utils/format/format.hpp"
 #include "../../utils/data_structures/types.hpp"
 #include "../../core/scanner/scanner.hpp"
@@ -53,6 +54,8 @@ namespace mtv {
             void get_next_output();
             void my_cout();
 
+            std::optional<double> getvar(const std::wstring &var);
+
             void evaluate_whit_afd(const State &afd);
             // Parser LL(1) - Expresiones generales
             void Z();
@@ -73,7 +76,7 @@ namespace mtv {
             void O();
             void F();
 
-
+            void enableColors();
     };
 } // namespace mtv
 

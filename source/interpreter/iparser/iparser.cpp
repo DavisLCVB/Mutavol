@@ -34,14 +34,14 @@ namespace mtv {
         {
             if (this->tok.lexem.empty())
             {
-                throw std::runtime_error("Error en la linea: " + std::to_string(this->tok.pos.row) + " columna: " + std::to_string(this->tok.pos.column));
+                throw std::runtime_error("Se esperaba un token");
             }
 
             auto transition = afd.find(state);
             if (transition == afd.end())
             {
                 // Simbolo de salida no encontrado
-                throw std::runtime_error("Error en la linea: " + std::to_string(this->tok.pos.row) + " columna: " + std::to_string(this->tok.pos.column));
+                throw std::runtime_error("Token esperado no identificable");
             }
 
             auto next_state = transition->second.find(this->tok.lexem);
@@ -51,7 +51,12 @@ namespace mtv {
                 // Estado no encontrado
                 if (next_state == transition->second.end())
                 {
-                    throw std::runtime_error("Error en la linea: " + std::to_string(this->tok.pos.row) + " columna: " + std::to_string(this->tok.pos.column));
+                    std::wstring options;
+                    for (auto &option : transition->second)
+                    {
+                        options += option.first + L" ";
+                    }
+                    throw std::runtime_error("Token esperado: " + wstring_to_string(options));
                 }
             }
 
@@ -62,6 +67,11 @@ namespace mtv {
             }
             //Se supone si encontro un IDENTIFIER como nombre de variable
             if(state == L"q2") {
+                //VERIFICA SI EL IDENTIFICADOR YA EXISTE
+                if(getvar(this->tok.lexem).has_value()){
+                    std::string lexem_str = wstring_to_string(this->tok.lexem);
+                    throw std::runtime_error("La variable " + lexem_str + " ya ha sido declarada.");
+                }
                 std::get<1>(this->temp_declaration) = this->tok.lexem;
             }
             //Se supone si encontro un IDENTIFIER O LITERAL como valor de la variable
@@ -71,23 +81,6 @@ namespace mtv {
                 C();
                 //Ultimo de C es una ',' o un ';'
                 this->memoria[this->ts_pointer] = evaluate_expr();
-                /*
-                if(this->tok.type == TokenType::LITERAL)
-                    this->memoria[this->ts_pointer] = std::stod(this->tok.lexem);
-                else if(this->tok.type == TokenType::IDENTIFIER) {
-                    bool band = false;
-                    //Recuperar valor de memoria
-                    for(row &r : this->ts) {
-                        if(std::get<1>(r) == this->tok.lexem) {
-                            this->memoria[this->ts_pointer] = this->memoria[std::get<2>(r)];
-                            band = true;
-                            break;
-                        }
-                    }
-                    std::string lexem_str = wstring_to_string(this->tok.lexem);
-                    if(!band) throw std::runtime_error("La variable " + lexem_str + "no ha sido declarada.");
-                }
-                */
                 this->ts_pointer++;
                 continue;
             }
@@ -132,6 +125,7 @@ namespace mtv {
 
     void Iparser::parse()
     {
+        enableColors();
         while(true) {
             Scanner::init_scanner();
             get_next_token();
@@ -144,8 +138,9 @@ namespace mtv {
             } catch (std::runtime_error &e) {
                 this->expr.clear();
                 this->output.clear();
-                std::wcout << L"Error en la linea: " << this->tok.pos.row << L" columna: " << this->tok.pos.column << L"\n";
-                std::wcout << L"Error en la lexema: " << this->tok.lexem << L" type:" << type_wstr(this->tok.type) << L"\n";
+                this->temp_declaration = std::make_tuple(L"", L"", this->ts_pointer);
+                std::wcout << L"Error en la posicion: " << this->tok.pos.column << L"\n";
+                std::wcout << L"Error en la lexema: " << this->tok.lexem << L" - type:" << type_wstr(this->tok.type) << L"\n";
                 std::wcout << e.what() << std::endl;
             }
 
@@ -192,10 +187,10 @@ namespace mtv {
             get_next_expr_value();
             C();
             if(this->tok.lexem != L";") {
-                throw std::runtime_error("Error en la linea: " + std::to_string(this->tok.pos.row) + " columna: " + std::to_string(this->tok.pos.column));
+                throw std::runtime_error("Token esperado para terminar la instrucción: ;");
             }
         } else {
-            throw std::runtime_error("Error en la linea: " + std::to_string(this->tok.pos.row) + " columna: " + std::to_string(this->tok.pos.column));
+            throw std::runtime_error("Token esperado para comenzar la asignación: =");
         }
     }
 
@@ -210,9 +205,11 @@ namespace mtv {
                     get_next_token();
                     D();
                 }*/
+            }else {
+                throw std::runtime_error("Token esperado para comenzar la instrucción: <<");
             }
         } else {
-            throw std::runtime_error("Error en la linea: " + std::to_string(this->tok.pos.row) + " columna: " + std::to_string(this->tok.pos.column));
+            throw std::runtime_error("Token esperado para comenzar la instrucción: <<");
         }
     }
 
@@ -236,9 +233,8 @@ namespace mtv {
             this->output.back().lexem.pop_back();
             //Refresh del siguiente token para la funcion D
             get_next_token();
-        }
-        else {
-            throw std::runtime_error("Error en la linea: " + std::to_string(this->tok.pos.row) + " columna: " + std::to_string(this->tok.pos.column));
+        }else {
+            throw std::runtime_error("Token esperado: IDENTIFIER, NUMERO o \"");
         }
     }
 
@@ -248,7 +244,7 @@ namespace mtv {
         } else if(this->tok.lexem == L";") {
             //lambda
         } else {
-            throw std::runtime_error("Error en la linea: " + std::to_string(this->tok.pos.row) + " columna: " + std::to_string(this->tok.pos.column));
+            throw std::runtime_error("Token esperado: << o ;");
         }
     }
 
@@ -267,7 +263,7 @@ namespace mtv {
         } else if(this->tok.lexem == L";" || this->tok.lexem == L"," || this->tok.lexem == L"<" || this->tok.lexem == L")") {
             //lambda
         } else {
-            throw std::runtime_error("Error en la linea: " + std::to_string(this->tok.pos.row) + " columna: " + std::to_string(this->tok.pos.column));
+            throw std::runtime_error("Token esperado: Operador o Fin de expresion");
         }
     }
 
@@ -286,7 +282,7 @@ namespace mtv {
         } else if(this->tok.lexem == L";" || this->tok.lexem == L"," || this->tok.lexem == L"<" || this->tok.lexem == L")" || this->tok.lexem == L"+" || this->tok.lexem == L"-") {
             //lambda
         } else {
-            throw std::runtime_error("Error en la linea: " + std::to_string(this->tok.pos.row) + " columna: " + std::to_string(this->tok.pos.column));
+            throw std::runtime_error("Token esperado: Operador o Fin de expresion");
         }
     }
 
@@ -303,7 +299,7 @@ namespace mtv {
         } else if(this->tok.lexem == L"*" || this->tok.lexem == L"/" || this->tok.lexem == L"+" || this->tok.lexem == L"-" || this->tok.lexem == L";" || this->tok.lexem == L"," || this->tok.lexem == L"<" || this->tok.lexem == L")") {
             //lambda
         } else {
-            throw std::runtime_error("Error en la linea: " + std::to_string(this->tok.pos.row) + " columna: " + std::to_string(this->tok.pos.column));
+            throw std::runtime_error("Token esperado: Operador o Fin de expresion");
         }
     }
 
@@ -312,7 +308,7 @@ namespace mtv {
             get_next_expr_value();
             C();
             if(this->tok.lexem != L")") {
-                throw std::runtime_error("Error en la linea: " + std::to_string(this->tok.pos.row) + " columna: " + std::to_string(this->tok.pos.column));
+                throw std::runtime_error("Token esperado: )");
             }
             get_next_expr_value();
         } else if(this->tok.type == TokenType::IDENTIFIER) {
@@ -320,7 +316,7 @@ namespace mtv {
         } else if(this->tok.type == TokenType::LITERAL) {
             get_next_expr_value();
         } else {
-            throw std::runtime_error("Error en la linea: " + std::to_string(this->tok.pos.row) + " columna: " + std::to_string(this->tok.pos.column));
+            throw std::runtime_error("Token esperado: ( o IDENTIFIER o NUMERO");
         }
     }
 
@@ -363,19 +359,12 @@ namespace mtv {
                 try {
                     stackOperands.push(std::stod(e));
                 } catch (const std::exception& err){
-                    bool band = false;
-                    //Recuperar valor de memoria
-                    for(row &r : this->ts) {
-                        if(std::get<1>(r) == e) {
-                            stackOperands.push(this->memoria[std::get<2>(r)]);
-                            band = true;
-                            break;
-                        }
+                    std::optional<double> r = getvar(e);
+                    if(!r.has_value()){
+                        std::string lexem_str = wstring_to_string(e);
+                        throw std::runtime_error("La variable " + lexem_str + "no ha sido declarada.");
                     }
-                    std::string lexem_str = wstring_to_string(e);
-                    if(!band) {
-                        throw std::runtime_error("La variable " + lexem_str + " no ha sido declarada.");
-                    }
+                    stackOperands.push(r.value());
                 }
             }
         }
@@ -383,15 +372,15 @@ namespace mtv {
         while(!stackOperators.empty()) {
             evaluate_operands(stackOperators, stackOperands);
         }
-
-        std::wcout << L"Expr : ";
+        //DEBUG DE EXPRESIONES
+        /*std::wcout << L"Expr : ";
         for(std::wstring &e : this->expr) {
             std::wcout << e << L" ";
         }
         std::wcout << std::endl;
-        this->expr.clear();
-        std::cout << "Result: " << stackOperands.top() << std::endl;
+        std::cout << "Result: " << stackOperands.top() << std::endl;*/
 
+        this->expr.clear();
         return stackOperands.top();
     }
 
@@ -419,26 +408,41 @@ namespace mtv {
     }
 
     void Iparser::my_cout() {
+        std::wcout << L"\033[1;34m>> ";
         for(Token_t &e: this->output) {
             if(e.type == TokenType::LITERAL)
                 std::wcout << e.lexem;
             else if(e.type == TokenType::IDENTIFIER) {
-                bool band = false;
-                //Recuperar valor de memoria
-                for(row &r : this->ts) {
-                    if(std::get<1>(r) == e.lexem) {
-                        std::wcout << this->memoria[std::get<2>(r)];
-                        band = true;
-                        break;
-                    }
+                std::optional<double> r = getvar(e.lexem);
+                if(!r.has_value()){
+                    std::string lexem_str = wstring_to_string(e.lexem);
+                    throw std::runtime_error("La variable " + lexem_str + "no ha sido declarada.");
                 }
-                std::string lexem_str = wstring_to_string(this->tok.lexem);
-                if(!band) throw std::runtime_error("La variable " + lexem_str + "no ha sido declarada.");
+                std::wcout << r.value();
             }
         }
         this->output.clear();
-        std::wcout << std::endl;
+        std::wcout << L"\033[0m" << std::endl;
     }
 
+    std::optional<double> Iparser::getvar(const std::wstring &var) {
+        for(row &r : this->ts) {
+            if(std::get<1>(r) == var) {
+                return this->memoria[std::get<2>(r)];
+            }
+        }
+        return std::nullopt;
+    }
+
+    void Iparser::enableColors() {
+     HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+     if (hOut == INVALID_HANDLE_VALUE) return;
+
+     DWORD dwMode = 0;
+     if (!GetConsoleMode(hOut, &dwMode)) return;
+
+     dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+     if (!SetConsoleMode(hOut, dwMode)) return;
+    }
 
 }
