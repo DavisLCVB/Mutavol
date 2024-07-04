@@ -91,7 +91,9 @@ namespace mtv {
 
     void Parser::get_next_token() {
         this->current_token = Scanner::get();
+#if DEBUG
         std::wcout << L"Token: " << this->current_token.lexem << L"\n";
+#endif
     }
 
     void Parser::evaluate_whit_afd(const State &afd) {
@@ -275,13 +277,17 @@ namespace mtv {
             if (pila.top() == L"if")
                 this->ifflag = false;
             std::wstring top = pila.top();
+#if DEBUG
             std::wcout << L"Se elimino: " << top << L"\n";
+#endif
             pila.pop();
         } else if (action == L"-")
             return;
         else {
             pila.push(action);
+#if DEBUG
             std::wcout << L"Se agrego: " << action << L"\n";
+#endif
         }
     }
 
@@ -428,7 +434,9 @@ namespace mtv {
         } else if (this->current_token.lexem == L"while") {
             if (!evaluate_conditional())
                 throw std::runtime_error("Error en la condicional");
+#if DEBUG
             std::wcout << L"Luego de evaluar la condicional: " << this->current_token.lexem << L"\n";
+#endif
             get_next_token();
             F();
             //get_next_token();
