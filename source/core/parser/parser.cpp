@@ -417,9 +417,70 @@ namespace mtv {
 
     void Parser::B() {
         if (this->current_token.type == TokenType::DTYPE) {
-            evaluate_whit_afd(this->afdVars);
+            evaluate_declaration(this->afdVars);
         } else {
             throw std::runtime_error("Token esperado: DTYPE");
+        }
+    }
+
+    void Parser::evaluate_declaration(const State &afd) {
+        std::wstring state = L"q0";
+        while (state != L"qf") {
+            if (this->current_token.lexem.empty()) {
+                this->error = true;
+                break;
+            }
+
+            if(state == L"q3") {
+                if(this->current_token.type == TokenType::IDENTIFIER || this->current_token.type == TokenType::LITERAL) {
+                    S_math();
+                    if(this->current_token.lexem == L")") {
+                        get_next_token();
+
+                    }
+                    if (this->current_token.lexem != L";" && this->current_token.lexem != L","){
+                        throw std::runtime_error("Token esperado: ';' o ',' - " + std::to_string(current_token.pos.row) + ", " +
+                                                 std::to_string(current_token.pos.column));
+
+                    }
+                    if (this->current_token.lexem == L",") {
+                        state = L"q1";
+                        get_next_token();
+                        continue;
+                    }
+                    state=L"qf";
+                    continue;
+                }
+            }
+
+            auto transition = afd.find(state);
+            if (transition == afd.end()) {
+                // Estado no encontrado
+                this->error = true;
+                break;
+            }
+
+
+            auto next_state = transition->second.find(this->current_token.lexem);
+            if (next_state == transition->second.end()) {
+                next_state = transition->second.find(type_wstr(this->current_token.type));
+                // Estado no encontrado
+                if (next_state == transition->second.end()) {
+                    this->error = true;
+                    break;
+                }
+            }
+            state = next_state->second;
+            if (state != L"qf")
+                get_next_token();
+        }
+
+        if (this->error || state != L"qf") {
+            std::wcout << L"Error en la linea: " << this->current_token.pos.row << L" columna: " << this->current_token.
+                    pos.column << L"\n";
+            std::wcout << L"Error en la lexema: " << this->current_token.lexem << L" type:" << type_wstr(
+                this->current_token.type) << L"\n";
+            std::wcout << L"Error en el estado: " << state << L"\n";
         }
     }
 
@@ -498,7 +559,7 @@ namespace mtv {
     }
 
     void Parser::A_math() {
-        if (current_token.lexem == L";" || current_token.lexem == L")") {
+        if (current_token.lexem == L";" || current_token.lexem == L")" || current_token.lexem == L",") {
             return;
         }
         if (current_token.type != TokenType::OPERATOREXP) {
