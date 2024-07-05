@@ -62,6 +62,7 @@ namespace mtv
 
         Parser();
 
+        void evaluate_declaration(const State &afd);
         void get_next_token();
 
         void evaluate_whit_afd(const State &afd);
